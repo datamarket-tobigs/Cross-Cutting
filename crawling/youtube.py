@@ -14,22 +14,27 @@ import subprocess
 import os
 error_list = []
 current_dir = os.getcwd()
+file_idx = 0
 try:
     yt = YouTube(f'https://www.youtube.com/watch?v={YTID}')
-    # print(yt.streams.filter(file_extension='mp4',res='720p').all())
-    print(yt.streams.all())
-    # vids = yt.streams.filter(file_extension='mp4',res='720p').all() 
-    # vids_360 = yt.streams.filter(file_extension='mp4',res='360p').all() 
-    # # [<Stream: itag="140" mime_type="audio/mp4" abr="128kbps" acodec="mp4a.40.2">, <Stream: itag="249" mime_type="audio/webm" abr="50kbps" acodec="opus">, <Stream: itag="250" mime_type="audio/webm" abr="70kbps" acodec="opus">, <Stream: itag="251" mime_type="audio/webm" abr="160kbps" acodec="opus">]
-    # vids[0].download(f'{current_dir}/720/')
+    print(yt.streams.filter(file_extension='mp4',res='720p').all())
+    vids = yt.streams.filter(file_extension='mp4',res='720p').all() 
+    vids_360 = yt.streams.filter(file_extension='mp4',res='360p').all() 
+    # [<Stream: itag="140" mime_type="audio/mp4" abr="128kbps" acodec="mp4a.40.2">, <Stream: itag="249" mime_type="audio/webm" abr="50kbps" acodec="opus">, <Stream: itag="250" mime_type="audio/webm" abr="70kbps" acodec="opus">, <Stream: itag="251" mime_type="audio/webm" abr="160kbps" acodec="opus">]
+    vids[0].download(f'{current_dir}/720/')
     
-    # # 음성 붙이기
-    # ### Overwrite 안됨.
-    # vids_360[0].download(f'{current_dir}/360/')
-    # subprocess.call(['ffmpeg','-ss','0','-i',
-    #     os.path.join(f'{current_dir}/360/',vids_360[0].default_filename),
-    #     os.path.join(f'{current_dir}/360/','a.mp3')
-    # ])
+    # 파일 이름 바꾸기(한글 이름이 안됨)
+    subprocess.call(['mv',
+        os.path.join(f'{current_dir}/720/',vids[0].default_filename),
+        os.path.join(f'{current_dir}/720/',f'one_vid_{file_idx}.mp4')
+    ])
+    # 음성 붙이기
+    ### Overwrite 안됨.
+    vids_360[0].download(f'{current_dir}/360/')
+    subprocess.call(['ffmpeg','-ss','0','-i',
+        os.path.join(f'{current_dir}/360/',vids_360[0].default_filename),
+        os.path.join(f'{current_dir}/360/',f'one_mp3_{file_idx}.mp3')
+    ])
     # ffmpeg -ss (start time) -i (direct video link) -t (duration needed) -c:v copy -c:a copy (destination file
 except Exception as ex:
     print('에러가 발생 했습니다', ex)
@@ -38,7 +43,7 @@ except Exception as ex:
 
 # %%
 import subprocess
-subprocess.getoutput(f'ffmpeg -i {current_dir}/720/k.mp4 -i {current_dir}/360/a.mp3 -c copy output.mp4')
+subprocess.getoutput(f'ffmpeg -i {current_dir}/720/one_vid_{file_idx}.mp4 -i {current_dir}/360/one_mp3_{file_idx}.mp3 -c copy output.mp4')
 
 #%%
 ## Trial 720p 음악 없는거 오디오넣기 -> 안됨 ㅜㅜ
