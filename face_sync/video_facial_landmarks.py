@@ -18,6 +18,8 @@ import dlib
 import cv2
 import numpy as np
 
+skip_frame_rate = 4
+
 def calculate_distance(reference_clip, compare_clip):
 	# construct the `argument parse and parse the arguments
 	# ap = argparse.ArgumentParser()
@@ -55,7 +57,7 @@ def calculate_distance(reference_clip, compare_clip):
 			# have a maximum width of 400 pixels, and convert it to
 			# ret, frame = capture.read() # frame = numpy array임
 			frame = clip.get_frame(i*1.0/clip.fps)
-			i+=4 # 1초에 60 fps가 있으므로 몇개는 skip해도 될거 같음!
+			i+=skip_frame_rate # 1초에 60 fps가 있으므로 몇개는 skip해도 될거 같음!
 			if (i*1.0/clip.fps)> clip.duration:
 				break
 			# if not ret:
@@ -104,4 +106,4 @@ def calculate_distance(reference_clip, compare_clip):
 				min_diff = total_diff
 				min_idx = i
 	
-	return min_diff, min_idx
+	return min_diff, (min_idx*skip_frame_rate)/clip.fps
