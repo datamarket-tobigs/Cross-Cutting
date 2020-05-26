@@ -5,15 +5,12 @@ import numpy as np
 import time
 from video_facial_landmarks import calculate_distance
 
-# output_1 1
-# output_2 0
-# output_3 5
 def distance(reference_clip, clip):
     # ref_frames = np.array([frame for frame in reference_clip.iter_frames()]) / 255.0
     # frames = np.array([frame for frame in clip.iter_frames()]) / 255.0
     min_diff, min_idx = calculate_distance(reference_clip, clip)
-
-    return min_diff
+    
+    return min_diff, min_idx
 
 def crosscut(videos_path="./video", option="random"):
     min_time = 1000.0
@@ -22,7 +19,8 @@ def crosscut(videos_path="./video", option="random"):
     #                0  1  2  3  4  5   6  7  8  9  10
     # start_times = [0, 4, 4, 0, 0, 1, 14, 0, 0, 0, 0]
     # VIDEO SONG START TIME ARRAY
-    start_times = [0, 0, 6] # 노래 개수
+    start_times = [0.5, 0.7, 0] # 노래 개수
+    # start_times = [0,0,5] # 노래 개수
 
     # VIDEO ALIGNMENT -> SLICE START TIME
     for i in range(len(os.listdir(videos_path))):
@@ -48,6 +46,7 @@ def crosscut(videos_path="./video", option="random"):
         # 10 sec.
         cur_t = t
         next_t = min(t+10, min_time) # 마지막은 10초보다 작은초일수도 있으니
+        # next_frame =  min(t+10, min_time) # 마지막은 10초보다 작은초일수도 있으니
 
         # RANDOM BASED METHOD
         if option=="random":
@@ -58,24 +57,29 @@ def crosscut(videos_path="./video", option="random"):
             # 지금 현재 영상!
             reference_clip = extracted_clips_array[current_idx].subclip(cur_t, next_t)
             d = 5000000
-            min_idx = 0
+            # ! 같은 영상 나올수도 있는 문제
+            min_idx = random.randint(0, len(extracted_clips_array)-1) # inf가 있을수도 있어서 random하게
             for video_idx in range(len(extracted_clips_array)):
                 if video_idx == current_idx:
                     continue
+                # 10초간 영상 확인
                 clip = extracted_clips_array[video_idx].subclip(cur_t, next_t)
                 # CALCULATE DISTANCE
-                cur_d = distance(reference_clip, clip)
-                print(current_idx, video_idx, cur_d)
+                cur_d, cur_frame = distance(reference_clip, clip)
+                # print(current_idx, video_idx, cur_d, cur_frame)
                 if d > cur_d:
                     d = cur_d
                     next_clip = clip
                     min_idx = video_idx
+                    # next_frame = cur_frame # 바로 옮길 frame
             # next_clip.write_videofile(str(t)+".mp4")
             current_idx = min_idx
             print("idx : {}".format(current_idx))
+            # 해당하는 길이만큼 자르기
+            # clip = extracted_clips_array[current_idx].subclip(cur_t, cur_frame)
             clip = next_clip
 
-        t = next_t
+        t = next_frame
         con_clips.append(clip)
 
     final_clip = concatenate_videoclips(con_clips)
@@ -84,12 +88,13 @@ def crosscut(videos_path="./video", option="random"):
         print("Not None")
         final_clip.audio = audioclip
 
-    final_clip.write_videofile("random.mp4", fps=60)
+    final_clip.write_videofile("random.mp4")
     return final_clip
 
 start_time = time.time()
-crosscut(videos_path="./video", option="random")
+crosscut(videos_path="./video", option="norandom")
 end_time = time.time()
 
 print(end_time - start_time)
 # 그냥 1 frame으로 총 작업하는데 2688.1366200447083
+# 4 frame  576.5337190628052

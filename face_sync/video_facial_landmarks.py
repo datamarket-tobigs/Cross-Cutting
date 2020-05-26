@@ -55,7 +55,7 @@ def calculate_distance(reference_clip, compare_clip):
 			# have a maximum width of 400 pixels, and convert it to
 			# ret, frame = capture.read() # frame = numpy array임
 			frame = clip.get_frame(i*1.0/clip.fps)
-			i+=1
+			i+=4 # 1초에 60 fps가 있으므로 몇개는 skip해도 될거 같음!
 			if (i*1.0/clip.fps)> clip.duration:
 				break
 			# if not ret:
@@ -105,10 +105,3 @@ def calculate_distance(reference_clip, compare_clip):
 				min_idx = i
 	
 	return min_diff, min_idx
-
-
-#%%
-video_path = './'
-clip = VideoFileClip(video_path)
-clip = clip.subclip(start_times[i], clip.duration) # 그냥 전체 영상을 시작점 맞게 자르기
-print(video_path, clip.fps, clip.duration)
