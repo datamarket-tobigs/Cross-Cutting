@@ -106,4 +106,4 @@ def calculate_distance(reference_clip, compare_clip):
 				min_diff = total_diff
 				min_idx = i
 	
-	return min_diff, (min_idx*skip_frame_rate)/clip.fps
+	return min_diff, (min_idx*skip_frame_rate)/clip.fps # 거리와 해당 초 위치를 계산해준다!

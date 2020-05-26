@@ -14,12 +14,13 @@ def distance(reference_clip, clip):
 
 def crosscut(videos_path="./video", option="random"):
     min_time = 1000.0
+    min_idx = 0
     audioclip = None
     extracted_clips_array = []
     #                0  1  2  3  4  5   6  7  8  9  10
     # start_times = [0, 4, 4, 0, 0, 1, 14, 0, 0, 0, 0]
     # VIDEO SONG START TIME ARRAY
-    start_times = [0.5, 0.7, 0] # 노래 개수
+    start_times = [0.3, 1, 0] # 노래 개수
     # start_times = [0,0,5] # 노래 개수
 
     # VIDEO ALIGNMENT -> SLICE START TIME
@@ -32,6 +33,7 @@ def crosscut(videos_path="./video", option="random"):
         if min_time > clip.duration: # ?? 제일 작은거 기준으로 자르려는건가?? 근데 그러면 그 앞에건 이미 크지않나??
             audioclip = clip.audio
             min_time = clip.duration
+            min_idx = i
             print(video_path, clip.fps, clip.duration)
         extracted_clips_array.append(clip)
     print(len(extracted_clips_array))
@@ -51,10 +53,12 @@ def crosscut(videos_path="./video", option="random"):
         next_frame =  min(t+window_time, min_time) # 제일 비슷한 영상을 못찾으면 그냥 window초 넘어갈수 있다
 
         # RANDOM BASED METHOD
-        if option=="random" or next_t - cur_t <padded_time:
+        if option=="random":
             random_video_idx = random.randint(0, len(extracted_clips_array)-1)
             clip = extracted_clips_array[random_video_idx].subclip(cur_t, next_t)
-        # DISTANCE BASED METHOD
+        # 제일 마지막 영상은 그냥 원래 영상 붙이기
+        elif min_time - cur_t < padded_time:
+            clip = extracted_clips_array[min_idx].subclip(cur_t, min_time)
         else:
             # 지금 현재 영상!
             reference_clip = extracted_clips_array[current_idx].subclip(cur_t, next_t)
