@@ -11,7 +11,8 @@ def video_to_frames(video, path_output_dir, i):
     while vidcap.isOpened():
         success, image = vidcap.read()
         if success:
-            cv2.imwrite(os.path.join(path_output_dir, '%d video %d.png') % (i, count), image)
+            if count % 30 == 0:
+                cv2.imwrite(os.path.join(path_output_dir, '%d video %d.png') % (i, count), image)
             count += 1
         else:
             break
