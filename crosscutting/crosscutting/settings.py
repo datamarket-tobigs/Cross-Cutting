@@ -49,7 +49,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'conf.urls'
+ROOT_URLCONF = 'crosscutting.urls'
 
 TEMPLATES = [
     {
@@ -67,8 +67,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'conf.wsgi.application'
-
+WSGI_APPLICATION = 'crosscutting.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
