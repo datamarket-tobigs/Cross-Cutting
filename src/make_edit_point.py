@@ -33,6 +33,9 @@ class make_edit_point():
                 for j in range(len(video_point[i])):
                     if j != start:
                         temp.append(abs(video_point[i][start] - video_point[i][j]))
+                    ## 자기 자신은 비교하지 않기 위해서 100 추가.
+                    else:
+                        temp.append(100)
                 frame_similarity.append(temp)
 
             edit_point = frame_similarity.index(min(frame_similarity))
