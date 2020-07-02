@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en-US">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <title>MMMaker</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#000000">
+    <meta name="description" content="Danny Garcia, senior front end engineer and designer at Apple. Building nice things for good people." />
+    <meta name="author" content="Danny Garcia" />
+    <script>document.documentElement.classList.remove('no-js');</script>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+<div class="canvas-container"></div>
+<main>
+    <h1 class="logo" style="z-index: 2"><a href="/">Cross-Cutting</a></h1>
+    <p class="intro type-primary">Create a meme with your adorable pet, baby, etc!<br>It is very easy with <a href="/">Cross-Cutting.</a></p>
+    <section class="timeline">
+{#        <article class="timeline-entry" style="display: block" id="statusSection">#}
+{#            <p style="font-size: 36px;font-weight: 600; margin: 40px 8% 40px 8%" id="loadingHeader">Could you wait a sec?</p>#}
+{#            <div style="display: flex; justify-content: space-between;align-items: center; padding: 0 8% 0 8%">#}
+{#                <div></div>#}
+{#                <div style="width: 100%;">#}
+{#                    <div class="loading-bar">#}
+{#                        <div class="loading-progress"></div>#}
+{#                    </div>#}
+{#                    <p style="text-align: center" id="loadingText">task waited</p>#}
+{#                </div>#}
+{#                <div style="height: 100%"></div>#}
+{#            </div>#}
+{#            <div style="text-align: center">#}
+{#                <a id="downloadBtn" class="btn">Download</a>#}
+{#                <a id="retryBtn" class="btn" href="/">retry</a>#}
+{#            </div>#}
+{#        </article>#}
+        <article class="timeline-entry" style="display: block" id="makeSection">
+            <div>
+                <p style="font-size: 36px;font-weight: 600; margin: 0 8% 40px 8%">Do you wanna try?</p>
+                <div class="dropzone-wrapper">
+                    <div class="dropzone" style="margin: 0 auto 0 auto; display: flex; justify-content: space-between; align-items: center; overflow: hidden" onclick="$fileInput.click();">
+                        <div></div>
+                        <div id="dropZoneMessage" style="color: rgb(209, 197, 173);font-size: 28px; font-weight: 600; line-height: 1.2; white-space: nowrap;">
+                            Drop files or click!
+                        </div>
+                        <div style="height: 100%;"></div>
+                    </div>
+                </div>
+                <div style="text-align: center;">
+                    <a id="makeBtn" class="btn">Make</a>
+                </div>
+            </div>
+        </article>
+    </section>
+    <footer>
+        <div class="footer-content">
+            <input type="file" multiple id="fileInput" style="display: none">
+            <p>You can find the source code on our <a href="https://github.com/C4Ution/MMMaker">Github</a>.</p>
+        </div>
+    </footer>
+</main>
+<script type="text/javascript" src="{% static 'js/main.built.js' %}"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="{% static 'vendors/aws-sdk/aws-sdk.min.js' %}"></script>
+
+</body>
+</html>
