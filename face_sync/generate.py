@@ -8,9 +8,9 @@ from video_facial_landmarks import calculate_distance
 def distance(reference_clip, clip):
     # ref_frames = np.array([frame for frame in reference_clip.iter_frames()]) / 255.0
     # frames = np.array([frame for frame in clip.iter_frames()]) / 255.0
-    min_diff, min_idx = calculate_distance(reference_clip, clip)
+    min_diff, min_idx, frist_length, first_degree, second_length, second_degree = calculate_distance(reference_clip, clip)
     
-    return min_diff, min_idx
+    return min_diff, min_idx, frist_length, first_degree, second_length, second_degree
 
 def crosscut(videos_path="./video", option="random"):
     min_time = 1000.0
@@ -26,7 +26,6 @@ def crosscut(videos_path="./video", option="random"):
     # VIDEO ALIGNMENT -> SLICE START TIME
     for i in range(len(os.listdir(videos_path))):
         video_path = os.path.join(videos_path, sorted(os.listdir(videos_path))[i])
-        print(video_path)
         clip = VideoFileClip(video_path)
         clip = clip.subclip(start_times[i], clip.duration) # 그냥 전체 영상을 시작점 맞게 자르기
         print(video_path, clip.fps, clip.duration)
@@ -77,7 +76,7 @@ def crosscut(videos_path="./video", option="random"):
                 reference_clip_for_distance = reference_clip.subclip(padded_time, window_time)
                 clip_for_distance = clip.subclip(padded_time, window_time)
                 # CALCULATE DISTANCE
-                cur_d, plus_frame = distance(reference_clip_for_distance, clip_for_distance) 
+                cur_d, plus_frame, frist_length, first_degree, second_length, second_degree = distance(reference_clip_for_distance, clip_for_distance) 
                 print(current_idx, video_idx, cur_d, cur_t + padded_time + plus_frame)
                 if d > cur_d:
                     d = cur_d

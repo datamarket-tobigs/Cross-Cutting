@@ -16,6 +16,7 @@ import imutils
 import time
 import dlib
 import cv2
+import math
 import numpy as np
 
 skip_frame_rate = 4
@@ -96,14 +97,39 @@ def calculate_distance(reference_clip, compare_clip):
 	min_size = min(len(clips_frame_info[0]),len(clips_frame_info[1]))
 	min_diff = float("inf")
 	min_idx = 0
+	first_length =0
+	first_degree =0
+	second_length =0
+	second_degree =0
+	first_start_point = []
+	second_start_point = []
 	for i in range(min_size):
 		if len(clips_frame_info[0][i])>0 and len(clips_frame_info[1][i])>0: # 얼굴 둘다 있으면
-			# 양쪽 눈
-			left_eye = ((clips_frame_info[0][i][36][0] - clips_frame_info[1][i][36][0])**2 + (clips_frame_info[0][i][36][1] - clips_frame_info[1][i][36][1])**2)**0.5
-			right_eye = ((clips_frame_info[0][i][45][0] - clips_frame_info[1][i][45][0])**2 + (clips_frame_info[0][i][45][1] - clips_frame_info[1][i][45][1])**2)**0.5
+			# 두 영상에서 눈의 거리(왼쪽 눈 끼리, 오른쪽 눈 끼리)
+			l = 36 # 왼쪽 눈 왼쪽 끝
+			r = 45 # 오른쪽 눈3 오른쪽 끝
+			left_eye = ((clips_frame_info[0][i][l][0] - clips_frame_info[1][i][l][0])**2 + (clips_frame_info[0][i][l][1] - clips_frame_info[1][i][l][1])**2)**0.5
+			right_eye = ((clips_frame_info[0][i][r][0] - clips_frame_info[1][i][r][0])**2 + (clips_frame_info[0][i][r][1] - clips_frame_info[1][i][r][1])**2)**0.5
+			#http://www.gisdeveloper.co.kr/?p=1r5
+			first_gradient = (clips_frame_info[0][i][l][1]-clips_frame_info[0][i][r][1]) / (clips_frame_info[0][i][l][0]-clips_frame_info[0][i][r][0])
+			first_degree_temp = math.degrees(math.atan(first_gradient)) # radian -> degree
+			second_gradient = (clips_frame_info[1][i][l][1]-clips_frame_info[1][i][r][1]) / (clips_frame_info[1][i][l][0]-clips_frame_info[1][i][r][0])
+			second_degree_temp = math.degrees(math.atan(second_gradient)) # radian -> degree
+
+			# 첫번째 영상에서 눈길이
+			first_length_temp = ((clips_frame_info[0][i][l][0] - clips_frame_info[0][i][r][0])**2 + (clips_frame_info[0][i][l][1] - clips_frame_info[0][i][r][1])**2)**0.5
+			# 두번째 영상에서 눈길이
+			second_length_temp = ((clips_frame_info[1][i][l][0] - clips_frame_info[1][i][r][0])**2 + (clips_frame_info[1][i][l][1] - clips_frame_info[1][i][r][1])**2)**0.5
+
 			total_diff = left_eye + right_eye
 			if min_diff > total_diff:
 				min_diff = total_diff
+				first_length = first_length_temp
+				first_degree = first_degree_temp
+				second_length = second_length_temp
+				second_degree = second_degree_temp
+				first_start_point = (clips_frame_info[0][i][l][0],clips_frame_info[0][i][l][1])
+				second_start_point =(clips_frame_info[1][i][l][0],clips_frame_info[1][i][l][1])
 				min_idx = i
-	
-	return min_diff, (min_idx*skip_frame_rate)/clip.fps # 거리와 해당 초 위치를 계산해준다!
+	print(clip.fps)
+	return min_diff, (min_idx*skip_frame_rate)/clip.fps, first_length, first_degree, second_length, second_degree, first_start_point, second_start_point # 거리와 해당 초 위치를 계산해준다!
