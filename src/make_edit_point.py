@@ -5,4 +5,5 @@ file = "../img/0-10/5 video 210.png"
 model.write_file_name(file_name=file)
 a, b, c = model.run_model()
 print(a)
-model.visualize()
+print(b)
+print(c)
