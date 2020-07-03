@@ -5,9 +5,8 @@ import numpy as np
 import time
 from video_facial_landmarks import calculate_distance
 
-first_start_point  = (0,0)
-second_start_point = (0,0)
 ONE_FRAME_SEC = 0.033
+second_start_point_max = (0,0)
 
 def distance(reference_clip, clip):
     # ref_frames = np.array([frame for frame in reference_clip.iter_frames()]) / 255.0
@@ -39,17 +38,68 @@ def scroll(get_frame, t):
     # frame_region = frame.crop(x1=1.5,y1=110,x2=400,y2=810)
     return frame_region
 
+class Moving:
+    def __init__(self,second_start_point):
+        self.second_start_point = second_start_point
+    def __call__(self, get_frame, t):
+        # any process you want
+        frame = get_frame(t)
+        if len(self.second_start_point)==0:
+            print('---------------------')
+            return frame
+        else:
+            # 얘를 center로 만들어서 줄여버리자!!
+            cur_w = self.second_start_point[0]
+            cur_h = self.second_start_point[1]
+            print(cur_w,cur_h)
+            w_ratio = self.second_start_point[0]/1280 # 그 비율만큼 왼쪽 마이너스
+            h_ratio = self.second_start_point[1]/720 # 그 비율만큼 위쪽 마이너스
+            width_dist = abs(int(cur_w - 640))
+            height_dist = abs(int(cur_h - 360))
+            print(w_ratio, h_ratio)
+            # w1, w2 = int(cur_w - width_dist * w_ratio), int(cur_w + width_dist *(1-w_ratio)) ## 이걸 범위로 하면 안되네!!! 생각해보니까(dist 만큼만 잘라질거 아냐)
+            # h1, h2 = int(cur_h - height_dist * h_ratio), int(cur_h + height_dist *(1-h_ratio))
+
+            # 16:9 비율
+            w1, w2 = int(cur_w - 1120 * w_ratio), int(cur_w + 1120 *(1-w_ratio))
+            h1, h2 = int(cur_h - 630 * h_ratio), int(cur_h + 630 *(1-h_ratio))
+
+            frame_region = frame[h1:h2,w1:w2]
+            return frame_region
+
+
 def moving(get_frame, t):
+    print(t)
+    ### 여기 함수는 다 만들어지고 나서 실행됨(그러므로 전역변수로 현재 position을 저장해도, 제일 마지막 position으로 전체가 돌아가는 문제가 생김)
+    ### dict 로 만들어서 저장해야할듯!
     frame = get_frame(t)
-    if len(first_start_point)==0:
+    if len(second_start_point)==0:
         print('---------------------')
-        return frame
+        calced_width = int((720-int(t*50))*1280 /720) # 비율 맞춰서 자르기
+    
+        frame_region = frame[int(t*50):720,:calced_width]
+        return frame_region
     else:
-        cur_w = first_start_point[0]
-        cur_h = first_start_point[1]
-        width_dist = abs(int(cur_w - 500))
-        height_dist = abs(int(cur_h - 250))
-        frame_region = frame[height_dist:,width_dist:]
+        # 얘를 center로 만들어서 줄여버리자!!
+        cur_w = second_start_point[0]
+        cur_h = second_start_point[1]
+        print(cur_w,cur_h)
+        w_ratio = second_start_point[0]/1280 # 그 비율만큼 왼쪽 마이너스
+        h_ratio = second_start_point[1]/720 # 그 비율만큼 위쪽 마이너스
+        width_dist = abs(int(cur_w - 640))
+        height_dist = abs(int(cur_h - 360))
+        w1, w2 = int(cur_w - width_dist * w_ratio), int(cur_w + width_dist *(1-w_ratio))
+        h1, h2 = int(cur_h - height_dist * h_ratio), int(cur_h + height_dist *(1-h_ratio))
+
+        cur_w = 350
+        cur_h = 132
+        w1, w2 = int(cur_w - 640 * w_ratio), int(cur_w + 640 *(1-w_ratio))
+        h1, h2 = int(cur_h - 360 * h_ratio), int(cur_h + 360 *(1-h_ratio))
+
+        # w1, w2 = max(int(cur_w - 368),0), min(int(cur_w + 640),1280)
+        # h1, h2 = max(int(cur_h - 180),0), min(int(cur_h + 180),720)
+
+        frame_region = frame[h1:h2,w1:w2]
         return frame_region
     
 
@@ -59,14 +109,14 @@ def moving2(get_frame, t):
     The position of this region depends on the time.
     """
     frame = get_frame(t)
-    if len(first_start_point)==0:
+    if len(second_start_point)==0:
         print('---------------------')
         return frame
     else:
-        # print(first_start_point)
-        # print(first_start_point[0],first_start_point[1])
-        cur_w = first_start_point[0]
-        cur_h = first_start_point[1]
+        # print(second_start_point)
+        # print(second_start_point[0],second_start_point[1])
+        cur_w = second_start_point[0]
+        cur_h = second_start_point[1]
         width_dist = abs(int(cur_w - 500))
         height_dist = abs(int(cur_h - 250))
         print(height_dist, width_dist)
@@ -100,7 +150,7 @@ def moving2(get_frame, t):
         return frame_region
 
 def crosscut(videos_path="./video", option="random"):
-    global first_start_point 
+    global second_start_point 
     global second_start_point
     min_time = 1000.0
     min_idx = 0
@@ -131,7 +181,6 @@ def crosscut(videos_path="./video", option="random"):
     current_idx = 0
     window_time = 10
     padded_time = 3 # 얼굴이 클로즈업 된게 있으면 계속 클로즈업 된 부분만 찾으므로 3초정도 띄어준다.
-    min_time =20 ################# TEMP
     # GENERATE STAGEMIX
     # CONCAT SUBCLIP 0~ MIN DURATION CLIP TIME
     while t <= int(min_time):
@@ -163,7 +212,7 @@ def crosscut(videos_path="./video", option="random"):
                 # !! ㅜㅜ 제일 좋은 얼굴 부분 놓칠수도 있을듯!
                 reference_clip_for_distance = reference_clip.subclip(padded_time, window_time)
                 clip_for_distance = clip.subclip(padded_time, window_time)
-                # CALCULATE DISTANCE
+                # CALCULATE DISTANCE between reference_clip_for_distance, clip_for_distance(같은초에서 최선의 거리 장면 찾기)
                 cur_d, plus_frame, frist_length, first_degree, second_length, second_degree, first_start_point, second_start_point = distance(reference_clip_for_distance, clip_for_distance) 
                 
                 print(current_idx, video_idx, cur_d, cur_t + padded_time + plus_frame)
@@ -172,8 +221,9 @@ def crosscut(videos_path="./video", option="random"):
                     d = cur_d
                     min_idx = video_idx
                     next_frame = cur_t + padded_time + plus_frame # 바로 옮길 frame
-                    next_clip = clip.subclip(0, padded_time+ plus_frame) # 그 바꿀 부분만 자르는 클립!                    
-                   
+                    next_clip = clip.subclip(0, padded_time+ plus_frame) # 그 바꿀 부분만 자르는 클립!
+                    second_start_point_max = second_start_point
+
             current_idx = min_idx
             print("idx : {}".format(current_idx))
             # 해당하는 길이만큼 자르기
@@ -182,14 +232,17 @@ def crosscut(videos_path="./video", option="random"):
         # 여기서 편집하기
         if t>0:# 첫장면은 확대따윈 없다!
             clip_front = clip.subclip(0,ONE_FRAME_SEC*50) # 그 바꿀 부분만 자르는 클립!
-            clip_front = clip_front.fl(scroll)
-            clip_front = clip_front.resize((1280,720))
+            # clip_front = clip_front.fl(scroll)
+            # clip_front = clip_front.resize((1280,720))
             con_clips.append(clip_front)
             clip_middle = clip.subclip(ONE_FRAME_SEC*50,-1*ONE_FRAME_SEC*50) # 그 바꿀 부분만 자르는 클립!
         else:
             clip_middle = clip.subclip(0,-1*ONE_FRAME_SEC*50) # 그 바꿀 부분만 자르는 클립!
-        clip_back = clip.subclip(clip.duration-(1*ONE_FRAME_SEC*50),clip.duration)
-        clip_back = clip_back.fl(scroll)
+
+        print(clip.duration,'0000000duration---------')
+        clip_back = clip.subclip(clip.duration-(ONE_FRAME_SEC*50),clip.duration)
+        # clip_back = clip_back.fl(moving)
+        clip_back = clip_back.fl(Moving(second_start_point_max))
         clip_back = clip_back.resize((1280,720))
         t = next_frame
         con_clips.append(clip_middle)

@@ -131,5 +131,5 @@ def calculate_distance(reference_clip, compare_clip):
 				first_start_point = (clips_frame_info[0][i][l][0],clips_frame_info[0][i][l][1])
 				second_start_point =(clips_frame_info[1][i][l][0],clips_frame_info[1][i][l][1])
 				min_idx = i
-	print(clip.fps)
+				
 	return min_diff, (min_idx*skip_frame_rate)/clip.fps, first_length, first_degree, second_length, second_degree, first_start_point, second_start_point # 거리와 해당 초 위치를 계산해준다!
