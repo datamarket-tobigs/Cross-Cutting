@@ -8,7 +8,7 @@ from video_facial_landmarks import calculate_distance
 def distance(reference_clip, clip):
     # ref_frames = np.array([frame for frame in reference_clip.iter_frames()]) / 255.0
     # frames = np.array([frame for frame in clip.iter_frames()]) / 255.0
-    min_diff, min_idx, frist_length, first_degree, second_length, second_degree = calculate_distance(reference_clip, clip)
+    min_diff, min_idx, frist_length, first_degree, second_length, second_degree,_,_ = calculate_distance(reference_clip, clip)
     
     return min_diff, min_idx, frist_length, first_degree, second_length, second_degree
 
@@ -55,15 +55,14 @@ def crosscut(videos_path="./video", option="random"):
         if option=="random":
             random_video_idx = random.randint(0, len(extracted_clips_array)-1)
             clip = extracted_clips_array[random_video_idx].subclip(cur_t, next_t)
-        # 제일 마지막 영상은 그냥 원래 영상 붙이기
-        elif min_time - cur_t < padded_time:
-            clip = extracted_clips_array[min_idx].subclip(cur_t, min_time)
+            t = next_frame
+            con_clips.append(clip)
         else:
             # 지금 현재 영상!
             reference_clip = extracted_clips_array[current_idx].subclip(cur_t, next_t)
             d = 5000000
-            # ! 같은 영상 나올수도 있는 문제
-            min_idx = random.randint(0, len(extracted_clips_array)-1) # inf가 있을수도 있어서 random하게
+            # inf가 있을때는 이 idx로 설정됨!
+            min_idx = (current_idx+1)%len(extracted_clips_array) 
             for video_idx in range(len(extracted_clips_array)):
                 if video_idx == current_idx:
                     continue
@@ -72,25 +71,27 @@ def crosscut(videos_path="./video", option="random"):
                 
                 # 이미 확인한 앞부분은 무시해야 함!!(! 첫번째 영상은 3초는 무조건 안겹치는 문제 있음)
                 # !! ㅜㅜ 제일 좋은 얼굴 부분 놓칠수도 있을듯!
-                
-                reference_clip_for_distance = reference_clip.subclip(padded_time, window_time)
-                clip_for_distance = clip.subclip(padded_time, window_time)
                 # CALCULATE DISTANCE
-                cur_d, plus_frame, frist_length, first_degree, second_length, second_degree = distance(reference_clip_for_distance, clip_for_distance) 
-                print(current_idx, video_idx, cur_d, cur_t + padded_time + plus_frame)
+                cur_d, plus_frame, frist_length, first_degree, second_length, second_degree = distance(reference_clip, clip) 
+                print(current_idx, video_idx, cur_d, cur_t + plus_frame)
                 if d > cur_d:
                     d = cur_d
                     min_idx = video_idx
-                    next_frame = cur_t + padded_time + plus_frame # 바로 옮길 frame
-                    next_clip = clip.subclip(0, padded_time+ plus_frame) # 그 바꿀 부분만 자르는 클립!
-            # next_clip.write_videofile(str(t)+".mp4")
-            current_idx = min_idx
-            print("idx : {}".format(current_idx))
-            # 해당하는 길이만큼 자르기
-            clip = next_clip
+                    next_frame = cur_t + plus_frame # 바로 옮길 frame
+                    cur_clip = reference_clip.subclip(0, plus_frame)
+                    next_clip = clip.subclip(0, plus_frame) # 그 바꿀 부분만 자르는 클립!
 
-        t = next_frame
-        con_clips.append(clip)
+            # next_clip.write_videofile(str(t)+".mp4")
+            # 바로 다음 ㅔㄷ
+            current_idx = min_idx # 바로 다음에 이어지면 가까운 거리로 연결되는 데이터
+            print("idx : {}".format(current_idx))
+            clip = cur_clip # 현재 클립(바꾸면 가장 좋은 부분까지 잘린 현재 클립)
+            t = next_frame
+            con_clips.append(clip)
+            # 뒤에 padding 데이터 더하기
+            pad_clip = extracted_clips_array[current_idx].subclip(t, min(min_time,t+padded_time)) # min_time을 넘어가면 안됨!
+            t = min(min_time,t + padded_time) # padding 된 시간 더하기
+            con_clips.append(pad_clip)
 
     final_clip = concatenate_videoclips(con_clips)
 
