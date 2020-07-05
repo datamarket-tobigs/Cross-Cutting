@@ -67,7 +67,8 @@ def calculate_distance(reference_clip, compare_clip):
 			
 			# width 높이면 더 판별 잘되지만, computational power 높음
 			# The benefit of increasing the resolution of the input image prior to face detection is that it may allow us to detect more faces in the imag
-			frame = imutils.resize(frame, width=800)
+			# !!! 아니면 너무 느려지면 640으로 낮춰서 해도 괜찮을듯(1280은 너무 세세한거까지 잡음)
+			frame = imutils.resize(frame, width=640) ### !!!! 여기 width 계산도 중요하다!(실제 좌표로 옮겨야 하니까) 
 			gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
 			# detect faces in the grayscale frame
@@ -97,12 +98,12 @@ def calculate_distance(reference_clip, compare_clip):
 	min_size = min(len(clips_frame_info[0]),len(clips_frame_info[1]))
 	min_diff = float("inf")
 	min_idx = 0
-	first_length =0
-	first_degree =0
-	second_length =0
-	second_degree =0
-	first_start_point = []
-	second_start_point = []
+	refer_length =0
+	refer_degree =0
+	compare_length =0
+	compare_degree =0
+	refer_point = []
+	compare_point = []
 	for i in range(min_size):
 		if len(clips_frame_info[0][i])>0 and len(clips_frame_info[1][i])>0: # 얼굴 둘다 있으면
 			# 두 영상에서 눈의 거리(왼쪽 눈 끼리, 오른쪽 눈 끼리)
@@ -111,25 +112,27 @@ def calculate_distance(reference_clip, compare_clip):
 			left_eye = ((clips_frame_info[0][i][l][0] - clips_frame_info[1][i][l][0])**2 + (clips_frame_info[0][i][l][1] - clips_frame_info[1][i][l][1])**2)**0.5
 			right_eye = ((clips_frame_info[0][i][r][0] - clips_frame_info[1][i][r][0])**2 + (clips_frame_info[0][i][r][1] - clips_frame_info[1][i][r][1])**2)**0.5
 			#http://www.gisdeveloper.co.kr/?p=1r5
-			first_gradient = (clips_frame_info[0][i][l][1]-clips_frame_info[0][i][r][1]) / (clips_frame_info[0][i][l][0]-clips_frame_info[0][i][r][0])
-			first_degree_temp = math.degrees(math.atan(first_gradient)) # radian -> degree
-			second_gradient = (clips_frame_info[1][i][l][1]-clips_frame_info[1][i][r][1]) / (clips_frame_info[1][i][l][0]-clips_frame_info[1][i][r][0])
-			second_degree_temp = math.degrees(math.atan(second_gradient)) # radian -> degree
+			refer_gradient = (clips_frame_info[0][i][l][1]-clips_frame_info[0][i][r][1]) / (clips_frame_info[0][i][l][0]-clips_frame_info[0][i][r][0])
+			refer_degree_temp = math.degrees(math.atan(refer_gradient)) # radian -> degree
+			compare_gradient = (clips_frame_info[1][i][l][1]-clips_frame_info[1][i][r][1]) / (clips_frame_info[1][i][l][0]-clips_frame_info[1][i][r][0])
+			compare_degree_temp = math.degrees(math.atan(compare_gradient)) # radian -> degree
 
 			# 첫번째 영상에서 눈길이
-			first_length_temp = ((clips_frame_info[0][i][l][0] - clips_frame_info[0][i][r][0])**2 + (clips_frame_info[0][i][l][1] - clips_frame_info[0][i][r][1])**2)**0.5
+			refer_length_temp = ((clips_frame_info[0][i][l][0] - clips_frame_info[0][i][r][0])**2 + (clips_frame_info[0][i][l][1] - clips_frame_info[0][i][r][1])**2)**0.5
 			# 두번째 영상에서 눈길이
-			second_length_temp = ((clips_frame_info[1][i][l][0] - clips_frame_info[1][i][r][0])**2 + (clips_frame_info[1][i][l][1] - clips_frame_info[1][i][r][1])**2)**0.5
+			compare_length_temp = ((clips_frame_info[1][i][l][0] - clips_frame_info[1][i][r][0])**2 + (clips_frame_info[1][i][l][1] - clips_frame_info[1][i][r][1])**2)**0.5
 
 			total_diff = left_eye + right_eye
 			if min_diff > total_diff:
 				min_diff = total_diff
-				first_length = first_length_temp
-				first_degree = first_degree_temp
-				second_length = second_length_temp
-				second_degree = second_degree_temp
-				first_start_point = (clips_frame_info[0][i][l][0],clips_frame_info[0][i][l][1])
-				second_start_point =(clips_frame_info[1][i][l][0],clips_frame_info[1][i][l][1])
+				refer_length = refer_length_temp
+				refer_degree = refer_degree_temp
+				compare_length = compare_length_temp
+				compare_degree = compare_degree_temp
+				# 640 width 로 확인했으면 두배
+				refer_point = (clips_frame_info[0][i][l][0]*2,clips_frame_info[0][i][l][1]*2)	
+				compare_point =(clips_frame_info[1][i][l][0]*2,clips_frame_info[1][i][l][1]*2)
 				min_idx = i
-				
-	return min_diff, (min_idx*skip_frame_rate)/clip.fps, first_length, first_degree, second_length, second_degree, first_start_point, second_start_point # 거리와 해당 초 위치를 계산해준다!
+	
+	# 640 width 로 확인했으면 두배
+	return min_diff*2, (min_idx*skip_frame_rate)/clip.fps, refer_length*2, refer_degree, compare_length*2, compare_degree, refer_point, compare_point # 거리와 해당 초 위치를 계산해준다!
