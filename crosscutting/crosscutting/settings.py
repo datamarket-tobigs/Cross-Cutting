@@ -25,7 +25,7 @@ SECRET_KEY = 'xo!&p*u*03quaiyssnz)6^oyco5*s02=dq$z3z#&g$myt5*+py'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'sknife.kro.kr']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'www.sknife.kro.kr', 'sknife.kro.kr']
 
 
 # Application definition
