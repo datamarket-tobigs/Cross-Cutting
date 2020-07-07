@@ -25,42 +25,38 @@
     <h1 class="logo" style="z-index: 2"><a href="/">Cross-Cutting</a></h1>
     <p class="intro type-primary">Create a mixed music video with your favorite singer!<br>It is very easy with <a href="/">Cross-Cutting.</a></p>
     <section class="timeline">
-        <article class="timeline-entry" style="display: block; margin-bottom: 70px" id="makeSection">
+        <article class="timeline-entry" style="display: block" id="makeSection">
             <div style="padding: 0 50px; margin-bottom: 50px">
                 <h2>
                     <a href="{% url 'home' %}">Home</a> |
                     <a href="{% url 'video' %}">Videos</a> |
                     <a href="{% url 'about' %}">About</a>
                 </h2>
-                <h1 class="type-primary"><a>source</a></h1>
-                <p class="timeline-description" style="margin-bottom: 50px">
-                    Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
-                </p>
-                <div class="row">
-                    <img style="width: 49%"  src="https://sknife.s3.ap-northeast-2.amazonaws.com/1.png" alt="img">
-                    <img style="width: 49%"  src="https://sknife.s3.ap-northeast-2.amazonaws.com/2.png" alt="img">
-                    <img style="width: 49%"  src="https://sknife.s3.ap-northeast-2.amazonaws.com/3.png" alt="img">
-                    <img style="width: 49%"  src="https://sknife.s3.ap-northeast-2.amazonaws.com/4.png" alt="img">
-                    <img style="width: 49%"  src="https://sknife.s3.ap-northeast-2.amazonaws.com/5.png" alt="img">
-                    <img style="width: 49%"  src="https://sknife.s3.ap-northeast-2.amazonaws.com/6.png" alt="img">
-                </div>
-            </div>
-        </article>
-        <article class="timeline-entry" style="display: block;margin-bottom: 70px" id="makeSection">
-            <div style="padding: 0 50px">
                 <h1 class="type-primary"><a>result</a></h1>
                 <p class="timeline-description" style="margin-bottom: 50px">
                     Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
                 </p>
-            </div>
-        </article>
-        <article class="timeline-entry" style="display: block" id="makeSection">
-            <div style="padding: 0 50px; margin-bottom: 50px">
-                <h1 class="type-primary"><a>result</a></h1>
-                <p class="timeline-description" style="margin-bottom: 50px">
-                    Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
-                </p>
-				<div class="myVideo" id="my_video" data-video="http://sknife.s3.ap-northeast-2.amazonaws.com/face_detection_video.mp4" data-poster="{% static 'video/thumbnail.png' %}" data-type='video/mp4'></div>
+                <div class="myVideo" id="my_video" data-video="http://sknife.s3.ap-northeast-2.amazonaws.com/face_detection_video.mp4" data-poster="{% static 'video/thumbnail.png' %}" data-type='video/mp4'></div>
+                <div id="disqus_thread" style="margin-top: 30px"></div>
+                <script>
+
+                    /**
+                     *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+                     *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+                    /*
+                    var disqus_config = function () {
+                    this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+                    this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+                    };
+                    */
+                    (function() { // DON'T EDIT BELOW THIS LINE
+                        var d = document, s = d.createElement('script');
+                        s.src = 'https://www-sknife-kro-kr-1.disqus.com/embed.js';
+                        s.setAttribute('data-timestamp', +new Date());
+                        (d.head || d.body).appendChild(s);
+                    })();
+                </script>
+                <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
             </div>
         </article>
     </section>
