@@ -6,11 +6,11 @@ import time
 from video_facial_landmarks import calculate_distance
 import cv2
 
-ONE_FRAME_SEC = 0.0333333
+ONE_FRAME_SEC = 0.033366666666667 # 29.97002997002997fps의 역수!
 EYE_MIN_DIFF = 40 # 워워워~ 예에에
 WINDOW_TIME = 10
 PADDED_TIME = 3 # 얼굴이 클로즈업 된게 있으면 계속 클로즈업 된 부분만 찾으므로 3초정도 띄어준다.
-ZOOM_FRAME =30 # 얼굴 확대할때  시간
+ZOOM_FRAME =10 # 얼굴 확대할때  시간
 CROSS_FRAME = 5 #얼굴 스르르 시간
 AGAIN_ZOOM = 1.15
 
@@ -232,7 +232,6 @@ class Moving4:
                     H_real = zoom_h_size - (zoom_h_size- 720)*(t/ONE_FRAME_SEC)/ZOOM_FRAME
                     print(W_real, H_real, "W real H real")
                 elif self.transition_dir == 'big_to_small': # 되려 시간이 지나면서 사이즈가 더 커져야 resize를 하면 더 넓은 부분이 나옴
-                    # 이거계산할 때 진짜 운이 좋아서 잘 되는거다 ZOOM_FRAME 1초 t/ONE_FRAME_SEC 0.033 -> 30개 하면 0.99~1초. 그래서 1쯤 되어서 확대가 잘 되는거
                     W_real = 1280 + (zoom_w_size - 1280)*(t/ONE_FRAME_SEC)/ZOOM_FRAME
                     H_real = 720 + (zoom_h_size- 720)*(t/ONE_FRAME_SEC)/ZOOM_FRAME
                 else: # 'same' 그냥 큰 상태로 유지!
@@ -279,7 +278,16 @@ class ForceZoom:
             # 혹시 사이즈가 넘어가면 사이즈를 한번 더 크게 해보기(너무 딱 맞춰서 확대하려고 하지말구!)
             w1, w2 = int(cur_w - 1280 * self.ratio * w_ratio), int(cur_w + 1280 * self.ratio  *(1-w_ratio))
             h1, h2 = int(cur_h - 720 * self.ratio * h_ratio), int(cur_h + 720 * self.ratio *(1-h_ratio))
-            if not( h1>=0 and h2<=int(720 * self.ratio) and w1>=0 and w2 <=int(1280 * self.ratio)):
+            # 확대될 사이즈도 확인(Force ZOOM 이 가능했었니? az = again zoom)
+            cur_w_az = self.small_point[0] * self.ratio * AGAIN_ZOOM
+            cur_h_az = self.small_point[1] * self.ratio * AGAIN_ZOOM
+            w1_az, w2_az = int(cur_w_az - 1280 * self.ratio * w_ratio), int(cur_w_az + 1280 * self.ratio  *(1-w_ratio))
+            h1_az, h2_az = int(cur_h_az - 720 * self.ratio * h_ratio), int(cur_h_az + 720 * self.ratio *(1-h_ratio))
+            print(w1_az, w2_az, h1_az, h2_az, '== az info')
+            # 앞에서 안되어도 되는걸로 만들어질수도 있음...확대되어도 안되면 넘어가야지!
+            # 원래건 안되고(not) 확대되는건 되어야 함!! 
+            if not( h1>=0 and h2<=int(720 * self.ratio) and w1>=0 and w2 <=int(1280 * self.ratio)) and \
+               h1_az>=0 and h2_az<=int(720 * self.ratio*AGAIN_ZOOM) and w1_az>=0 and w2_az<=int(1280 * self.ratio*AGAIN_ZOOM):
                 # 사이즈가 넘어가서 확대를 했었다면, 나는 처음부터 다시 시작하자!
                 img_cv = cv2.resize(frame, dsize=(0, 0),fx=AGAIN_ZOOM, fy=AGAIN_ZOOM) # AGAIN_ZOOM 만큼 확대하기
                 zoom_frame = np.asarray(img_cv)
@@ -318,6 +326,8 @@ class ForceZoom:
                     print('-----NOT AVAIL NOT AVAIL')
                     frame_region = frame
                 return frame_region
+            else: # 그런 경우 아니었으면 확대 없이 return
+                return frame
 
 
 class MovingInv:
