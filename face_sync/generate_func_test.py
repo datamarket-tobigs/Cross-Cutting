@@ -13,14 +13,15 @@ PADDED_TIME = 3 # 얼굴이 클로즈업 된게 있으면 계속 클로즈업 �
 ZOOM_FRAME =10 # 얼굴 확대할때  시간
 CROSS_FRAME = 5 #얼굴 스르르 시간
 AGAIN_ZOOM = 1.15
+ROTATE_MAX = 3
 
 # init
 compare_point_max = [(0,0),(0,0)]
 refer_point_max = [(0,0),(0,0)]
 refer_length_max = 0
 compare_length_max = 0
-first_degree_max = 0
-second_degree_max = 0
+refer_degree_max = 0
+compare_degree_max = 0
 
 def distance(reference_clip, clip):
     # ref_frames = np.array([frame for frame in reference_clip.iter_frames()]) / 255.0
@@ -156,11 +157,12 @@ class Moving3:
 
 
 class Moving4:
-    def __init__(self,small_point, big_point, ratio, transition_dir):
+    def __init__(self,small_point, big_point, ratio, transition_dir, rotate_degree):
         self.small_point = small_point[0]
         self.big_point = big_point[0]
         self.ratio = ratio
         self.transition_dir = transition_dir
+        self.rotate_degree = -1 *rotate_degree
     def __call__(self, get_frame, t):
         # any process you want
         frame = get_frame(t)
@@ -170,12 +172,18 @@ class Moving4:
         else:
             # !! ratio가 더 커져야 한다-> 역수
             img_cv = cv2.resize(frame,(int(1280 * self.ratio),int(720 * self.ratio)))
+            cur_w = self.small_point[0] * self.ratio
+            cur_h = self.small_point[1] * self.ratio
+
+            # width height 순서가 바뀜.
+            cur_degree = self.rotate_degree*(ZOOM_FRAME-t/ONE_FRAME_SEC)/ZOOM_FRAME
+            M = cv2.getRotationMatrix2D((cur_w, cur_h), cur_degree, 1.0)
+            img_cv = cv2.warpAffine(img_cv, M, (int(1280 * self.ratio),int(720 * self.ratio)))
             zoom_frame = np.asarray(img_cv)
             # 얘를 center로 만들어서 줄여버리자!!
             print(self.small_point[0], self.small_point[1], '-- prev cord')
             print(self.ratio, 'ratio')
-            cur_w = self.small_point[0] * self.ratio
-            cur_h = self.small_point[1] * self.ratio
+
             # 이동할 애 기준으로 만들어야 함!(이게 조 ㅁ다른 포인트!!!)
             w_ratio = self.big_point[0]/1280 # 그 비율만큼 왼쪽 마이너스
             h_ratio = self.big_point[1]/720 # 그 비율만큼 위쪽 마이너스
@@ -412,9 +420,9 @@ def crosscut(videos_path="./video", option="random"):
                 # reference_clip_for_distance = reference_clip.subclip(PADDED_TIME, WINDOW_TIME)
                 # clip_for_distance = clip.subclip(PADDED_TIME, WINDOW_TIME)
                 # CALCULATE DISTANCE between reference_clip_for_distance, clip_for_distance(같은초에서 최선의 거리 장면 찾기)
-                cur_d, plus_frame, frist_length, first_degree, compare_length, second_degree, refer_point, compare_point = distance(reference_clip, clip) 
-                print('from video:',current_idx, ' to video',video_idx, ' in distance ',cur_d, ' in sec ' ,cur_t + plus_frame)
-                # print(frist_length, first_degree, compare_length, second_degree)
+                cur_d, plus_frame, refer_length, refer_degree, compare_length, compare_degree, refer_point, compare_point = distance(reference_clip, clip) 
+                print('from video:',current_idx, ' to video',video_idx, ' in distance ',cur_d, ' in sec ' ,cur_t + plus_frame, 'first deg ', refer_degree, 'second deg ', compare_degree)
+                # print(refer_length, refer_degree, compare_length, compare_degree)
                 if d > cur_d:
                     d = cur_d
                     min_idx = video_idx
@@ -423,10 +431,10 @@ def crosscut(videos_path="./video", option="random"):
                     next_clip = clip.subclip(0, plus_frame) # 그 바꿀 부분만 자르는 클립!
                     compare_point_max = compare_point
                     refer_point_max = refer_point
-                    refer_length_max = frist_length # 이거에 맞춰서 확대 축소 해줄거야!
+                    refer_length_max = refer_length # 이거에 맞춰서 확대 축소 해줄거야!
                     compare_length_max = compare_length # 이거에 맞춰 확대 축소 해줄거야!
-                    first_degree_max = first_degree
-                    second_degree_max = second_degree
+                    refer_degree_max = refer_degree
+                    compare_degree_max = compare_degree
             
             if d == 5000000: # 둘다 inf일떄,
                 current_idx = min_idx # 바로 다음에 이어지면 가까운 거리로 연결되는 데이터
@@ -459,7 +467,7 @@ def crosscut(videos_path="./video", option="random"):
                 if abs(compare_length_max-refer_length_max) < EYE_MIN_DIFF:
                     if compare_length_max> refer_length_max and compare_length_max-refer_length_max < EYE_MIN_DIFF:
                         # clip_back = clip_back.fl(Moving2(refer_point_max, compare_point_max, refer_length_max/compare_length_max,'small_to_big'))
-                        clip_back = clip_back.fl(Moving4(refer_point_max, compare_point_max, compare_length_max/refer_length_max,'small_to_big'))
+                        clip_back = clip_back.fl(Moving4(refer_point_max, compare_point_max, compare_length_max/refer_length_max,'small_to_big',compare_degree_max-refer_degree_max))
                         clip_back = clip_back.resize((1280,720))
                     else:
                         clip_back = clip_back.fl(ForceZoom(compare_point_max, refer_point_max, refer_length_max/compare_length_max,'small_to_big'))
@@ -487,7 +495,7 @@ def crosscut(videos_path="./video", option="random"):
                 if refer_length_max> compare_length_max and refer_length_max-compare_length_max < EYE_MIN_DIFF:
                     # 더 작아져야하쥐!(결국 확대?)
                     # pad_front = pad_front.fl(Moving2(compare_point_max, refer_point_max, compare_length_max/refer_length_max, 'big_to_small'))
-                    pad_front = pad_front.fl(Moving4(compare_point_max, refer_point_max, refer_length_max/compare_length_max, 'big_to_small'))
+                    pad_front = pad_front.fl(Moving4(compare_point_max, refer_point_max, refer_length_max/compare_length_max, 'big_to_small',refer_degree_max-compare_degree_max))
                     pad_front = pad_front.resize((1280,720))
                     print('yooooooo')
                     # cross_clip = extracted_clips_array[prev_idx].subclip(t, t+ONE_FRAME_SEC*30) # min_time을 넘어가면 안됨!
