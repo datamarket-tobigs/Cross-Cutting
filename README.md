@@ -1,6 +1,6 @@
 <div>
 <center>
-<img src=""></img>
+<img src="https://github.com/minjoong507/Cross-Cutting/blob/develop/icon.PNG"></img>
 </center>
 </div>
 
