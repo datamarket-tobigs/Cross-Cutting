@@ -19,7 +19,7 @@ import cv2
 import math
 import numpy as np
 
-skip_frame_rate = 4
+skip_frame_rate = 2
 
 def calculate_distance(reference_clip, compare_clip):
 	# construct the `argument parse and parse the arguments
@@ -104,6 +104,8 @@ def calculate_distance(reference_clip, compare_clip):
 	compare_degree =0
 	refer_point = []
 	compare_point = []
+	dist_arr = []
+	# Caculate distance by frame
 	for i in range(min_size):
 		if len(clips_frame_info[0][i])>0 and len(clips_frame_info[1][i])>0: # 얼굴 둘다 있으면
 			# 두 영상에서 눈의 거리(왼쪽 눈 끼리, 오른쪽 눈 끼리)
@@ -123,8 +125,17 @@ def calculate_distance(reference_clip, compare_clip):
 			compare_length_temp = ((clips_frame_info[1][i][l][0] - clips_frame_info[1][i][r][0])**2 + (clips_frame_info[1][i][l][1] - clips_frame_info[1][i][r][1])**2)**0.5
 
 			total_diff = left_eye + right_eye
-			if min_diff > total_diff:
-				min_diff = total_diff
+			dist_arr.append(total_diff)
+
+			# Minimize max distance in 5 frames
+			if i < 4: # 4번째 frame부터 계산
+				continue
+			if None in dist_arr[i-4:i+1]: # None이 있으면 pass
+				continue
+
+			local_max = np.max(dist_arr[i-4:i+1])
+			if min_diff > local_max:
+				min_diff = local_max
 				refer_length = refer_length_temp
 				refer_degree = refer_degree_temp
 				compare_length = compare_length_temp
@@ -133,6 +144,8 @@ def calculate_distance(reference_clip, compare_clip):
 				refer_point = (clips_frame_info[0][i][l][0]*2,clips_frame_info[0][i][l][1]*2)	
 				compare_point =(clips_frame_info[1][i][l][0]*2,clips_frame_info[1][i][l][1]*2)
 				min_idx = i
-	
+		else:
+			dist_arr.append(None)
+
 	# 640 width 로 확인했으면 두배
 	return min_diff*2, (min_idx*skip_frame_rate)/clip.fps, refer_length*2, refer_degree, compare_length*2, compare_degree, refer_point, compare_point # 거리와 해당 초 위치를 계산해준다!
