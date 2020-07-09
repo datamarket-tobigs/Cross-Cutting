@@ -1,6 +1,6 @@
 <div>
 <center>
-<img src="https://github.com/minjoong507/Cross-Cutting/blob/develop/icon.PNG"></img>
+<img src=""></img>
 </center>
 </div>
 
@@ -27,32 +27,43 @@ To install package
 
 ------------------------------
 ```bash
+    $ cd crosscutting
     $ python manage.py makemigrations
     $ python manage.py migrate
     $ python manage.py runserver 0.0.0.0:8000
 ```
 
 ## Test
-#### Run Unit Test
+#### Run generate pose based mixed video code
 
 -------------------
 ```bash
-    $ cd Cross-Cutting
-    $ python main.py
+    $ cd src
+    $ python generate.py
 ```
 
-#### Run Code Style Test
+#### Run generate face based mixed video code
 
 -------------------
 ```bash
+    $ cd src
+    $ python generate.py
+```
+
+#### Run generate frame based mixed video code
+
+-------------------
+
+```bash
+    $ cd src
     $ python generate.py
 ```
 
 ## Contribute
 
 ----------------
-* Issue Tracker: 
-* Source Code: 
+* Issue Tracker: https://github.com/Tobigs-Team06/Cross-Cutting/issues
+* Source Code: https://github.com/Tobigs-Team06/Cross-Cutting/src
 
 ## Contribution guidelines
 
@@ -65,16 +76,41 @@ We use GitHub issues for tracking requests and bugs.
 
 Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
 
-<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
-<!-- prettier-ignore-start -->
-<!-- markdownlint-disable -->
-
 <table>
   <tr>
-    <td align="center"><a href="https://github.com/minjoong507><img src="https://github.com/minjoong507/Cross-Cutting/blob/feature/moviepy/icon.PNG" width="100px;" alt=""/><br /><sub><b>MIN JOON</b></sub></a><br /><a href="#question-kentcdodds" title="Answering Questions">💬</a> <a href="https://github.com/all-contributors/all-contributors/commits?author=kentcdodds" title="Documentation">📖</a> <a href="https://github.com/all-contributors/all-contributors/pulls?q=is%3Apr+reviewed-by%3Akentcdodds" title="Reviewed Pull Requests">👀</a> <a href="#talk-kentcdodds" title="Talks">📢</a></td>
+    <td align="center"><a href="https://github.com/minjoong507><img src="https://sknife.s3.ap-northeast-2.amazonaws.com/%EB%AF%BC%EC%A4%80.png" width="100px;" alt=""/><br /><sub><b>정민준</b></sub></a><br /><a href="#question-kentcdodds" title="Answering Questions">💬</a> <a href="https://github.com/all-contributors/all-contributors/commits?author=kentcdodds" title="Documentation">📖</a> <a href="https://github.com/all-contributors/all-contributors/pulls?q=is%3Apr+reviewed-by%3Akentcdodds" title="Reviewed Pull Requests">👀</a> <a href="#talk-kentcdodds" title="Talks">📢</a></td>
   </tr>
 </table>
 
+<table>
+  <tr>
+    <td align="center"><a href="https://github.com/minjoong507><img src="https://sknife.s3.ap-northeast-2.amazonaws.com/%EB%AF%BC%EC%A4%80.png" width="100px;" alt=""/><br /><sub><b>심은선</b></sub></a><br /><a href="#question-kentcdodds" title="Answering Questions">💬</a> <a href="https://github.com/all-contributors/all-contributors/commits?author=kentcdodds" title="Documentation">📖</a> <a href="https://github.com/all-contributors/all-contributors/pulls?q=is%3Apr+reviewed-by%3Akentcdodds" title="Reviewed Pull Requests">👀</a> <a href="#talk-kentcdodds" title="Talks">📢</a></td>
+  </tr>
+</table>
+
+<table>
+  <tr>
+    <td align="center"><a href="https://github.com/minjoong507><img src="https://sknife.s3.ap-northeast-2.amazonaws.com/%EB%AF%BC%EC%A4%80.png" width="100px;" alt=""/><br /><sub><b>이승현</b></sub></a><br /><a href="#question-kentcdodds" title="Answering Questions">💬</a> <a href="https://github.com/all-contributors/all-contributors/commits?author=kentcdodds" title="Documentation">📖</a> <a href="https://github.com/all-contributors/all-contributors/pulls?q=is%3Apr+reviewed-by%3Akentcdodds" title="Reviewed Pull Requests">👀</a> <a href="#talk-kentcdodds" title="Talks">📢</a></td>
+  </tr>
+</table>
+
+<table>
+  <tr>
+    <td align="center"><a href="https://github.com/minjoong507><img src="https://sknife.s3.ap-northeast-2.amazonaws.com/%EB%AF%BC%EC%A4%80.png" width="100px;" alt=""/><br /><sub><b>조민호</b></sub></a><br /><a href="#question-kentcdodds" title="Answering Questions">💬</a> <a href="https://github.com/all-contributors/all-contributors/commits?author=kentcdodds" title="Documentation">📖</a> <a href="https://github.com/all-contributors/all-contributors/pulls?q=is%3Apr+reviewed-by%3Akentcdodds" title="Reviewed Pull Requests">👀</a> <a href="#talk-kentcdodds" title="Talks">📢</a></td>
+  </tr>
+</table>
+
+<table>
+  <tr>
+    <td align="center"><a href="https://github.com/minjoong507><img src="https://sknife.s3.ap-northeast-2.amazonaws.com/%EB%AF%BC%EC%A4%80.png" width="100px;" alt=""/><br /><sub><b>최혜빈</b></sub></a><br /><a href="#question-kentcdodds" title="Answering Questions">💬</a> <a href="https://github.com/all-contributors/all-contributors/commits?author=kentcdodds" title="Documentation">📖</a> <a href="https://github.com/all-contributors/all-contributors/pulls?q=is%3Apr+reviewed-by%3Akentcdodds" title="Reviewed Pull Requests">👀</a> <a href="#talk-kentcdodds" title="Talks">📢</a></td>
+  </tr>
+</table>
+
+<table>
+  <tr>
+    <td align="center"><a href="https://github.com/minjoong507><img src="https://sknife.s3.ap-northeast-2.amazonaws.com/%EB%AF%BC%EC%A4%80.png" width="100px;" alt=""/><br /><sub><b>이유진</b></sub></a><br /><a href="#question-kentcdodds" title="Answering Questions">💬</a> <a href="https://github.com/all-contributors/all-contributors/commits?author=kentcdodds" title="Documentation">📖</a> <a href="https://github.com/all-contributors/all-contributors/pulls?q=is%3Apr+reviewed-by%3Akentcdodds" title="Reviewed Pull Requests">👀</a> <a href="#talk-kentcdodds" title="Talks">📢</a></td>
+  </tr>
+</table>
 
 ## License
 
