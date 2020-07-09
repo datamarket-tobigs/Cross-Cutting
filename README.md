@@ -78,39 +78,17 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 
 <table>
   <tr>
-    <td align="center"><a href="https://github.com/minjoong507><img src="https://sknife.s3.ap-northeast-2.amazonaws.com/%EB%AF%BC%EC%A4%80.png" width="100px;" alt=""/><br /><sub><b>정민준</b></sub></a><br /><a href="#question-kentcdodds" title="Answering Questions">💬</a> <a href="https://github.com/all-contributors/all-contributors/commits?author=kentcdodds" title="Documentation">📖</a> <a href="https://github.com/all-contributors/all-contributors/pulls?q=is%3Apr+reviewed-by%3Akentcdodds" title="Reviewed Pull Requests">👀</a> <a href="#talk-kentcdodds" title="Talks">📢</a></td>
+    <td align="center"><a href="https://github.com/dizwe"><img src="https://sknife.s3.ap-northeast-2.amazonaws.com/minho.jpeg" width="100px;" alt=""/><br /><sub><b>MinHo Jo</b></sub></a><br /><a href="#question-kentcdodds" title="Answering Questions">💬</a> <a href="https://github.com/all-contributors/all-contributors/commits?author=kentcdodds" title="Documentation">📖</a> <a href="https://github.com/all-contributors/all-contributors/pulls?q=is%3Apr+reviewed-by%3Akentcdodds" title="Reviewed Pull Requests">👀</a> <a href="#infra-jakebolam" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a></td>
+      <td align="center"><a href="https://github.com/minjoong507"><img src="https://sknife.s3.ap-northeast-2.amazonaws.com/%EB%AF%BC%EC%A4%80.png" width="100px;" alt=""/><br /><sub><b>MinJoon Jung</b></sub></a><br /><a href="#question-kentcdodds" title="Answering Questions">💬</a> <a href="https://github.com/all-contributors/all-contributors/commits?author=kentcdodds" title="Documentation">📖</a> <a href="https://github.com/all-contributors/all-contributors/pulls?q=is%3Apr+reviewed-by%3Akentcdodds" title="Reviewed Pull Requests">👀</a> <a href="#talk-kentcdodds" title="Talks">📢</a></td>
+      <td align="center"><a href="https://github.com/Eunsunn"><img src="https://sknife.s3.ap-northeast-2.amazonaws.com/%EC%9D%80%EC%84%A0.png" width="100px;" alt=""/><br /><sub><b>EunSun Sim</b></sub></a><br /><a href="#question-kentcdodds" title="Answering Questions">💬</a> <a href="https://github.com/all-contributors/all-contributors/commits?author=kentcdodds" title="Documentation">📖</a> <a href="https://github.com/all-contributors/all-contributors/pulls?q=is%3Apr+reviewed-by%3Akentcdodds" title="Reviewed Pull Requests">👀</a> <a href="#talk-kentcdodds" title="Talks">📢</a></td>
+    <td align="center"><a href="https://github.com/YoojLee"><img src="https://sknife.s3.ap-northeast-2.amazonaws.com/%EC%9C%A0%EC%A7%84.png" width="100px;" alt=""/><br /><sub><b>YuJin Lee</b></sub></a><br /><a href="https://github.com/all-contributors/all-contributors/commits?author=jfmengels" title="Documentation">📖</a> <a href="https://github.com/all-contributors/all-contributors/pulls?q=is%3Apr+reviewed-by%3Ajfmengels" title="Reviewed Pull Requests">👀</a> <a href="#tool-jfmengels" title="Tools">🔧</a></td>
+    <td align="center"><a href="https://github.com/lsh3163"><img src="https://sknife.s3.ap-northeast-2.amazonaws.com/%EC%8A%B9%ED%98%84" width="100px;" alt=""/><br /><sub><b>SeungHyun Lee</b></sub></a><br /><a href="https://github.com/all-contributors/all-contributors/commits?author=jakebolam" title="Documentation">📖</a> <a href="#tool-jakebolam" title="Tools">🔧</a> <a href="#infra-jakebolam" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="#maintenance-jakebolam" title="Maintenance">🚧</a></td>
+    <td align="center"><a href="https://github.com/lilly9117"><img src="https://sknife.s3.ap-northeast-2.amazonaws.com/%ED%98%9C%EB%B9%88.png" width="100px;" alt=""/><br /><sub><b>HyeBin Choi</b></sub></a><br /><a href="#design-tbenning" title="Design">🎨</a> <a href="#maintenance-tbenning" title="Maintenance">🚧</a></td>
   </tr>
 </table>
 
-<table>
-  <tr>
-    <td align="center"><a href="https://github.com/minjoong507><img src="https://sknife.s3.ap-northeast-2.amazonaws.com/%EB%AF%BC%EC%A4%80.png" width="100px;" alt=""/><br /><sub><b>심은선</b></sub></a><br /><a href="#question-kentcdodds" title="Answering Questions">💬</a> <a href="https://github.com/all-contributors/all-contributors/commits?author=kentcdodds" title="Documentation">📖</a> <a href="https://github.com/all-contributors/all-contributors/pulls?q=is%3Apr+reviewed-by%3Akentcdodds" title="Reviewed Pull Requests">👀</a> <a href="#talk-kentcdodds" title="Talks">📢</a></td>
-  </tr>
-</table>
 
-<table>
-  <tr>
-    <td align="center"><a href="https://github.com/minjoong507><img src="https://sknife.s3.ap-northeast-2.amazonaws.com/%EB%AF%BC%EC%A4%80.png" width="100px;" alt=""/><br /><sub><b>이승현</b></sub></a><br /><a href="#question-kentcdodds" title="Answering Questions">💬</a> <a href="https://github.com/all-contributors/all-contributors/commits?author=kentcdodds" title="Documentation">📖</a> <a href="https://github.com/all-contributors/all-contributors/pulls?q=is%3Apr+reviewed-by%3Akentcdodds" title="Reviewed Pull Requests">👀</a> <a href="#talk-kentcdodds" title="Talks">📢</a></td>
-  </tr>
-</table>
 
-<table>
-  <tr>
-    <td align="center"><a href="https://github.com/minjoong507><img src="https://sknife.s3.ap-northeast-2.amazonaws.com/%EB%AF%BC%EC%A4%80.png" width="100px;" alt=""/><br /><sub><b>조민호</b></sub></a><br /><a href="#question-kentcdodds" title="Answering Questions">💬</a> <a href="https://github.com/all-contributors/all-contributors/commits?author=kentcdodds" title="Documentation">📖</a> <a href="https://github.com/all-contributors/all-contributors/pulls?q=is%3Apr+reviewed-by%3Akentcdodds" title="Reviewed Pull Requests">👀</a> <a href="#talk-kentcdodds" title="Talks">📢</a></td>
-  </tr>
-</table>
-
-<table>
-  <tr>
-    <td align="center"><a href="https://github.com/minjoong507><img src="https://sknife.s3.ap-northeast-2.amazonaws.com/%EB%AF%BC%EC%A4%80.png" width="100px;" alt=""/><br /><sub><b>최혜빈</b></sub></a><br /><a href="#question-kentcdodds" title="Answering Questions">💬</a> <a href="https://github.com/all-contributors/all-contributors/commits?author=kentcdodds" title="Documentation">📖</a> <a href="https://github.com/all-contributors/all-contributors/pulls?q=is%3Apr+reviewed-by%3Akentcdodds" title="Reviewed Pull Requests">👀</a> <a href="#talk-kentcdodds" title="Talks">📢</a></td>
-  </tr>
-</table>
-
-<table>
-  <tr>
-    <td align="center"><a href="https://github.com/minjoong507><img src="https://sknife.s3.ap-northeast-2.amazonaws.com/%EB%AF%BC%EC%A4%80.png" width="100px;" alt=""/><br /><sub><b>이유진</b></sub></a><br /><a href="#question-kentcdodds" title="Answering Questions">💬</a> <a href="https://github.com/all-contributors/all-contributors/commits?author=kentcdodds" title="Documentation">📖</a> <a href="https://github.com/all-contributors/all-contributors/pulls?q=is%3Apr+reviewed-by%3Akentcdodds" title="Reviewed Pull Requests">👀</a> <a href="#talk-kentcdodds" title="Talks">📢</a></td>
-  </tr>
-</table>
 
 ## License
 
