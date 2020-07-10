@@ -16,10 +16,9 @@ import imutils
 import time
 import dlib
 import cv2
-import math
 import numpy as np
 
-skip_frame_rate = 2
+skip_frame_rate = 4
 
 def calculate_distance(reference_clip, compare_clip):
 	# construct the `argument parse and parse the arguments
@@ -67,8 +66,7 @@ def calculate_distance(reference_clip, compare_clip):
 			
 			# width 높이면 더 판별 잘되지만, computational power 높음
 			# The benefit of increasing the resolution of the input image prior to face detection is that it may allow us to detect more faces in the imag
-			# !!! 아니면 너무 느려지면 640으로 낮춰서 해도 괜찮을듯(1280은 너무 세세한거까지 잡음)
-			frame = imutils.resize(frame, width=640) ### !!!! 여기 width 계산도 중요하다!(실제 좌표로 옮겨야 하니까) 
+			frame = imutils.resize(frame, width=800)
 			gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
 			# detect faces in the grayscale frame
@@ -96,58 +94,47 @@ def calculate_distance(reference_clip, compare_clip):
 	cv2.destroyAllWindows()
 
 	min_size = min(len(clips_frame_info[0]),len(clips_frame_info[1]))
-	min_diff = float("inf")
-	min_idx = 0
-	refer_length =0
-	refer_degree =0
-	compare_length =0
-	compare_degree =0
-	refer_point = []
-	compare_point = []
-	dist_arr = []
-	# Caculate distance by frame
+	dist_arr = list()
+	# min_diff = float("inf")
+	# min_idx = 0
+	
+	# Calculate distance by frame
 	for i in range(min_size):
 		if len(clips_frame_info[0][i])>0 and len(clips_frame_info[1][i])>0: # 얼굴 둘다 있으면
-			# 두 영상에서 눈의 거리(왼쪽 눈 끼리, 오른쪽 눈 끼리)
-			l = 36 # 왼쪽 눈 왼쪽 끝
-			r = 45 # 오른쪽 눈3 오른쪽 끝
-			left_eye = ((clips_frame_info[0][i][l][0] - clips_frame_info[1][i][l][0])**2 + (clips_frame_info[0][i][l][1] - clips_frame_info[1][i][l][1])**2)**0.5
-			right_eye = ((clips_frame_info[0][i][r][0] - clips_frame_info[1][i][r][0])**2 + (clips_frame_info[0][i][r][1] - clips_frame_info[1][i][r][1])**2)**0.5
-			#http://www.gisdeveloper.co.kr/?p=1r5
-			refer_gradient = (clips_frame_info[0][i][l][1]-clips_frame_info[0][i][r][1]) / (clips_frame_info[0][i][l][0]-clips_frame_info[0][i][r][0])
-			refer_degree_temp = math.degrees(math.atan(refer_gradient)) # radian -> degree
-			compare_gradient = (clips_frame_info[1][i][l][1]-clips_frame_info[1][i][r][1]) / (clips_frame_info[1][i][l][0]-clips_frame_info[1][i][r][0])
-			compare_degree_temp = math.degrees(math.atan(compare_gradient)) # radian -> degree
-
-			# 첫번째 영상에서 눈길이
-			refer_length_temp = ((clips_frame_info[0][i][l][0] - clips_frame_info[0][i][r][0])**2 + (clips_frame_info[0][i][l][1] - clips_frame_info[0][i][r][1])**2)**0.5
-			# 두번째 영상에서 눈길이
-			compare_length_temp = ((clips_frame_info[1][i][l][0] - clips_frame_info[1][i][r][0])**2 + (clips_frame_info[1][i][l][1] - clips_frame_info[1][i][r][1])**2)**0.5
-
+			# 양쪽 눈
+			left_eye = ((clips_frame_info[0][i][36][0] - clips_frame_info[1][i][36][0])**2 + (clips_frame_info[0][i][36][1] - clips_frame_info[1][i][36][1])**2)**0.5
+			right_eye = ((clips_frame_info[0][i][45][0] - clips_frame_info[1][i][45][0])**2 + (clips_frame_info[0][i][45][1] - clips_frame_info[1][i][45][1])**2)**0.5
 			total_diff = left_eye + right_eye
 			dist_arr.append(total_diff)
-
-			# Minimize max distance in 5 frames
-			if i < 4: # 4번째 frame부터 계산
-				continue
-			if None in dist_arr[i-4:i+1]: # None이 있으면 pass
-				continue
-
-			local_max = np.max(dist_arr[i-4:i+1])
-			if min_diff > local_max:
-				min_diff = local_max
-				refer_length = refer_length_temp
-				refer_degree = refer_degree_temp
-				compare_length = compare_length_temp
-				compare_degree = compare_degree_temp
-				# 640 width 로 확인했으면 두배
-				refer_point = [(clips_frame_info[0][i][l][0]*2,clips_frame_info[0][i][l][1]*2),
-								(clips_frame_info[0][i][r][0]*2,clips_frame_info[0][i][r][1]*2)]
-				compare_point =[(clips_frame_info[1][i][l][0]*2,clips_frame_info[1][i][l][1]*2),
-								(clips_frame_info[1][i][r][0]*2,clips_frame_info[1][i][r][1]*2)]
-				min_idx = i
+			# if min_diff > total_diff:
+			# 	min_diff = total_diff
+			# 	min_idx = i
 		else:
 			dist_arr.append(None)
+    
+	# print("dist arr")
+	# for i in range(min_size):
+	# 	print(dist_arr[i], end=' ')
+	# print()
 
-	# 640 width 로 확인했으면 두배
-	return min_diff*2, (min_idx*skip_frame_rate)/clip.fps, refer_length*2, refer_degree, compare_length*2, compare_degree, refer_point, compare_point # 거리와 해당 초 위치를 계산해준다!
+	# Minimize max distance in 5 frames
+	min_diff = np.float('Inf')
+	min_idx = 0
+	max_dist = []
+	for i in range(min_size-4):
+		if None in dist_arr[i:i+5]:
+			max_dist.append(None)
+			# continue
+		else:
+			tmp_max = np.max(dist_arr[i:i+5])
+			max_dist.append(tmp_max)
+			if min_diff > tmp_max:
+				min_diff = tmp_max
+				min_idx = i
+	
+	# print("minmax idx : " + str(min_idx))
+	# for i in range(len(max_dist)):
+	# 	print(max_dist[i], end=' ')
+	# print()
+
+	return min_diff, (min_idx*skip_frame_rate)/clip.fps # 거리와 해당 초 위치를 계산해준다!
