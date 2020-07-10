@@ -13,7 +13,7 @@ WINDOW_TIME = 10
 PADDED_TIME = 3 # 얼굴이 클로즈업 된게 있으면 계속 클로즈업 된 부분만 찾으므로 3초정도 띄어준다.
 ZOOM_FRAME =20 # 얼굴 확대할때  시간
 CROSS_FRAME = 4 #얼굴 스르르 시간
-ONE_ZOOM = 1.15 # 회전할 때 검은 부분 최대한 줄이기 위해서 확대하는 비율 일단 안씀
+ONE_ZOOM = 1.5 # 회전할 때 검은 부분 최대한 줄이기 위해서 확대하는 비율 일단 안씀
 AGAIN_ZOOM = 1.15
 ROTATE_MAX = 7
 
@@ -31,131 +31,6 @@ def distance(reference_clip, clip):
     min_diff, min_idx, refer_length, refer_degree, compare_length, compare_degree, refer_point, compare_point = calculate_distance(reference_clip, clip)
     
     return min_diff, min_idx, refer_length, refer_degree, compare_length, compare_degree, refer_point, compare_point
-
-def resize_func(t):
-    if t < 3:
-        return 1 + 0.5*t  # Zoom-in.
-    elif 3 <= t <= 5:
-        return 1 + 0.5*3  # Stay.
-    else: # 5 < t
-        return 1  # Zoom-out.
-
-def scroll(get_frame, t):
-    """
-    This function returns a 'region' of the current frame.
-    The position of this region depends on the time.
-    """
-    
-    frame = get_frame(t)
-    print(frame.shape)
-    print(t)
-    calced_width = int((720-int(t*50))*1280 /720) # 비율 맞춰서 자르기
-    
-    frame_region = frame[int(t*50):720,:calced_width]
-    # frame_region = frame.crop(x1=1.5,y1=110,x2=400,y2=810)
-    return frame_region
-
-class Moving2:
-    # cross_clip = cross_clip.fl(Moving2(compare_point_max, refer_point_max, compare_length_max/refer_length_max, 'same'))
-    def __init__(self,small_point, big_point, ratio, transition_dir):
-        self.small_point = small_point[0]
-        self.big_point = big_point[0]
-        self.ratio = ratio
-        self.transition_dir = transition_dir
-    def __call__(self, get_frame, t):
-        # any process you want
-        frame = get_frame(t)
-        if len(self.small_point)==0:
-            # print('---------------------')
-            return frame
-        else:
-            # 얘를 center로 만들어서 줄여버리자!!
-            cur_w = self.small_point[0]
-            cur_h = self.small_point[1]
-            # print(cur_w, cur_h)
-            # 이동할 애 기준으로 만들어야 함!(이게 Moving 1 이랑 다른 포인트!!!)
-            w_ratio = self.big_point[0]/1280 # 그 비율만큼 왼쪽 마이너스
-            h_ratio = self.big_point[1]/720 # 그 비율만큼 위쪽 마이너스
-
-            # W_real = 1280 - (1280 - 1280 * self.ratio)
-            # H_real = 720 - (720 - 720 * self.ratio)
-
-            # 시간초에 따라서 바뀌어야 함!
-            ## !! 이것도 문제가 위치 잘 맞춰놓고 비율을 다시 맞추는거니까 문제가 있음!
-            if self.transition_dir == 'small_to_big':
-                W_real = 1280 - (1280 - 1280 * self.ratio)*(t/ONE_FRAME_SEC)/ZOOM_FRAME
-                H_real = 720 - (720 - 720 * self.ratio)*(t/ONE_FRAME_SEC)/ZOOM_FRAME
-            elif self.transition_dir == 'big_to_small':
-                W_real = 1280 - (1280 - 1280 * self.ratio)*(ZOOM_FRAME - t/ONE_FRAME_SEC)/ZOOM_FRAME
-                H_real = 720 - (720 - 720 * self.ratio)*(ZOOM_FRAME - t/ONE_FRAME_SEC)/ZOOM_FRAME
-            else: # 'same' 그냥 큰 상태로 유지!
-                W_real = 1280 * self.ratio
-                H_real = 720 * self.ratio
-
-            # 16:9 비율
-            w1, w2 = int(cur_w - W_real * w_ratio), int(cur_w + W_real *(1-w_ratio))
-            h1, h2 = int(cur_h - H_real * h_ratio), int(cur_h + H_real *(1-h_ratio))
-            if h1>=0 and h2<=720 and w1>=0 and w2 <=1280:
-                print('---------cutteddddd')
-                frame_region = frame[h1:h2,w1:w2]
-            else:
-                print('-----NOT AVAIL NOT AVAIL')
-                frame_region = frame
-            return frame_region
-
-
-class Moving3:
-    def __init__(self,small_point, big_point, ratio, transition_dir):
-        self.small_point = small_point[0]
-        self.big_point = big_point[0]
-        self.ratio = ratio
-        self.transition_dir = transition_dir
-    def __call__(self, get_frame, t):
-        # any process you want
-        frame = get_frame(t)
-        if len(self.small_point)==0:
-            # print('---------------------')
-            return frame
-        else:
-            # !! ratio가 더 커져야 한다-> 역수
-            img_cv = cv2.resize(frame,(int(1280 * self.ratio),int(720 * self.ratio)))
-            zoom_frame = np.asarray(img_cv)
-            # 얘를 center로 만들어서 줄여버리자!!
-            print(self.small_point[0], self.small_point[1], '-- prev cord')
-            print(self.ratio, 'ratio')
-            cur_w = self.small_point[0] * self.ratio
-            cur_h = self.small_point[1] * self.ratio
-            # 이동할 애 기준으로 만들어야 함!(이게 조 ㅁ다른 포인트!!!)
-            w_ratio = self.big_point[0]/1280 # 그 비율만큼 왼쪽 마이너스
-            h_ratio = self.big_point[1]/720 # 그 비율만큼 위쪽 마이너스
-
-            # 시간초에 따라서 바뀌어야 함!
-            if self.transition_dir == 'small_to_big': # 앞에가 작고 뒤에가 큰거!
-                print('----------small to big')
-                W_real = 1280 * self.ratio - (1280 * self.ratio - 1280)*(t/ONE_FRAME_SEC)/ZOOM_FRAME
-                H_real = 720 * self.ratio - (720 * self.ratio- 720)*(t/ONE_FRAME_SEC)/ZOOM_FRAME
-                print(W_real, H_real, "W real H real")
-            elif self.transition_dir == 'big_to_small': # 되려 시간이 지나면서 사이즈가 더 커져야 resize를 하면 더 넓은 부분이 나옴
-                # 이거계산할 때 진짜 운이 좋아서 잘 되는거다 ZOOM_FRAME 1초 t/ONE_FRAME_SEC 0.033 -> 30개 하면 0.99~1초. 그래서 1쯤 되어서 확대가 잘 되는거
-                W_real = 1280 + (1280 * self.ratio - 1280)*(t/ONE_FRAME_SEC)/ZOOM_FRAME
-                H_real = 720 + (720 * self.ratio- 720)*(t/ONE_FRAME_SEC)/ZOOM_FRAME
-            else: # 'same' 그냥 큰 상태로 유지!
-                W_real = 1280
-                H_real = 720
-
-            # 16:9 비율
-            print(cur_w, cur_h,'cur info')
-            w1, w2 = int(cur_w - W_real * w_ratio), int(cur_w + W_real *(1-w_ratio))
-            h1, h2 = int(cur_h - H_real * h_ratio), int(cur_h + H_real *(1-h_ratio))
-            # 확대된 범위를 넘어갔을때!
-            print(w1, w2, h1, h2,'infooo')
-            if h1>=0 and h2<=int(720 * self.ratio) and w1>=0 and w2 <=int(1280 * self.ratio):
-                print('---------cutteddddd')
-                frame_region = zoom_frame[h1:h2,w1:w2]
-            else:
-                print('-----NOT AVAIL NOT AVAIL')
-                frame_region = frame
-            return frame_region
 
 class Moving4:
     def __init__(self,small_point, big_point, ratio, transition_dir, rotate_degree):
