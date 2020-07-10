@@ -130,8 +130,10 @@ def calculate_distance(reference_clip, compare_clip):
 				compare_length = compare_length_temp
 				compare_degree = compare_degree_temp
 				# 640 width 로 확인했으면 두배
-				refer_point = (clips_frame_info[0][i][l][0]*2,clips_frame_info[0][i][l][1]*2)	
-				compare_point =(clips_frame_info[1][i][l][0]*2,clips_frame_info[1][i][l][1]*2)
+				refer_point = [(clips_frame_info[0][i][l][0]*2,clips_frame_info[0][i][l][1]*2),
+								(clips_frame_info[0][i][r][0]*2,clips_frame_info[0][i][r][1]*2)]
+				compare_point =[(clips_frame_info[1][i][l][0]*2,clips_frame_info[1][i][l][1]*2),
+								(clips_frame_info[1][i][r][0]*2,clips_frame_info[1][i][r][1]*2)]
 				min_idx = i
 	
 	# 640 width 로 확인했으면 두배

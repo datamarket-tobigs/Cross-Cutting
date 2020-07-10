@@ -13,7 +13,7 @@ WINDOW_TIME = 10
 PADDED_TIME = 3 # 얼굴이 클로즈업 된게 있으면 계속 클로즈업 된 부분만 찾으므로 3초정도 띄어준다.
 ZOOM_FRAME =20 # 얼굴 확대할때  시간
 CROSS_FRAME = 4 #얼굴 스르르 시간
-ONE_ZOOM = 1.5 # 회전할 때 검은 부분 최대한 줄이기 위해서 확대하는 비율 일단 안씀
+ONE_ZOOM = 1.2 # 회전할 때 검은 부분 최대한 줄이기 위해서 확대하는 비율 일단 안씀
 AGAIN_ZOOM = 1.15
 ROTATE_MAX = 7
 
@@ -352,6 +352,7 @@ class ForceZoom2:
             # 원래건 안되고(not) 확대되는건 되어야 함!! 
             if not( h1>=0 and h2<=int(round(720 * self.ratio*ONE_ZOOM)) and w1>=0 and w2 <=int(round(1280 * self.ratio*ONE_ZOOM))) and \
                h1_az>=0 and h2_az<=int(round(720 * self.ratio*ONE_ZOOM*AGAIN_ZOOM)) and w1_az>=0 and w2_az<=int(round(1280 * self.ratio*AGAIN_ZOOM*ONE_ZOOM)):
+                print('### FORCEZOOM ONEZOOM AGAIN ZOOM')
                 # 사이즈가 넘어가서 확대를 했었다면, 나는 처음부터 다시 시작하자!
                 img_cv = cv2.resize(frame, dsize=(0, 0),fx=ONE_ZOOM * AGAIN_ZOOM, fy=ONE_ZOOM * AGAIN_ZOOM) # AGAIN_ZOOM 만큼 확대하기
                 zoom_frame = np.asarray(img_cv)
@@ -391,6 +392,7 @@ class ForceZoom2:
                     frame_region = frame
                 return frame_region
             else: # 그런 경우 아니었으면 확대 없이 return
+                print('@@@ FORCEZOOM just once')
                 # 사이즈가 넘어가서 확대를 했었다면, 나는 처음부터 다시 시작하자!
                 # 이때는 그냥 한번 확대해주자!
                 img_cv = cv2.resize(frame, dsize=(0, 0),fx=ONE_ZOOM, fy=ONE_ZOOM) # AGAIN_ZOOM 만큼 확대하기
@@ -423,7 +425,7 @@ class ForceZoom2:
                 h1, h2 = int(round(cur_h - H_real * h_ratio)), int(round(cur_h + H_real *(1-h_ratio)))
                 # 확대된 범위를 넘어갔을때!
                 # print(w1, w2, h1, h2,'infooo')
-                if h1>=0 and h2<=int(round(720 * self.ratio*AGAIN_ZOOM)) and w1>=0 and w2 <=int(round(1280 * self.ratio*AGAIN_ZOOM)):
+                if h1>=0 and h2<=int(round(720 * self.ratio*ONE_ZOOM)) and w1>=0 and w2 <=int(round(1280 * self.ratio*ONE_ZOOM)):
                     print('---------cutteddddd')
                     frame_region = zoom_frame[h1:h2,w1:w2]
                 else:
@@ -566,6 +568,7 @@ def crosscut(videos_path="./video", option="random"):
                         clip_back = clip_back.fl(Moving5(refer_point_max, compare_point_max, compare_length_max/refer_length_max,'small_to_big',compare_degree_max-refer_degree_max))
                         clip_back = clip_back.resize((1280,720))
                     else:
+                        print('HERERERERERERERERERERERERERERERER')
                         clip_back = clip_back.fl(ForceZoom2(compare_point_max, refer_point_max, refer_length_max/compare_length_max,'small_to_big'))
                         clip_back = clip_back.resize((1280,720))
 
@@ -599,6 +602,7 @@ def crosscut(videos_path="./video", option="random"):
                         cross_clip = extracted_clips_array[prev_idx].subclip(t, t+ONE_FRAME_SEC*CROSS_FRAME) # min_time을 넘어가면 안됨!
                         pad_front = CompositeVideoClip([pad_front, cross_clip.crossfadeout(ONE_FRAME_SEC*CROSS_FRAME)])
                     else: # 혹시 앞에서 크기가 안되어서 확대를 더 했다면?(실제 비율보다 AGAIN_ZOOM 만큼 확대했다면,)
+                        print('!!!Force Zoom in pad_front')
                         pad_front = pad_front.fl(ForceZoom2(refer_point_max, compare_point_max , compare_length_max/refer_length_max, 'big_to_small'))
                         pad_front = pad_front.resize((1280,720))
                         cross_clip = extracted_clips_array[prev_idx].subclip(t, t+ONE_FRAME_SEC*CROSS_FRAME) # min_time을 넘어가면 안됨!
