@@ -56,13 +56,11 @@ class Moving4:
             img_cv = cv2.warpAffine(img_cv, M, (int(round(1280 * self.ratio)),int(round(720 * self.ratio))))
             zoom_frame = np.asarray(img_cv)
             # 얘를 center로 만들어서 줄여버리자!!
-            print(self.small_point[0], self.small_point[1], '-- prev cord')
-            print(self.ratio, 'ratio')
+            print(self.small_point[0], self.small_point[1], '-- prev cord', self.ratio, 'ratio')
 
             # 이동할 애 기준으로 만들어야 함!(이게 조 ㅁ다른 포인트!!!)
             w_ratio = self.big_point[0]/1280 # 그 비율만큼 왼쪽 마이너스
             h_ratio = self.big_point[1]/720 # 그 비율만큼 위쪽 마이너스
-            print(t,'------------------------t')
             # 혹시 사이즈가 넘어가면 사이즈를 한번 더 크게 해보기(너무 딱 맞춰서 확대하려고 하지말구!)
             w1, w2 = int(round(cur_w - 1280 * self.ratio * w_ratio)), int(round(cur_w + 1280 * self.ratio  *(1-w_ratio)))
             h1, h2 = int(round(cur_h - 720 * self.ratio * h_ratio)), int(round(cur_h + 720 * self.ratio *(1-h_ratio)))
@@ -70,10 +68,8 @@ class Moving4:
                 # 시간초에 따라서 바뀌어야 함!
                 zoom_w_size, zoom_h_size =  1280 * self.ratio, 720 * self.ratio 
                 if self.transition_dir == 'small_to_big': # 앞에가 작고 뒤에가 큰거!
-                    print('----------small to big')
                     W_real = zoom_w_size - (zoom_w_size - 1280)*(t/ONE_FRAME_SEC)/ZOOM_FRAME
                     H_real = zoom_h_size - (zoom_h_size- 720)*(t/ONE_FRAME_SEC)/ZOOM_FRAME
-                    print(W_real, H_real, "W real H real")
                 elif self.transition_dir == 'big_to_small': # 되려 시간이 지나면서 사이즈가 더 커져야 resize를 하면 더 넓은 부분이 나옴
                     # 이거계산할 때 진짜 운이 좋아서 잘 되는거다 ZOOM_FRAME 1초 t/ONE_FRAME_SEC 0.033 -> 30개 하면 0.99~1초. 그래서 1쯤 되어서 확대가 잘 되는거
                     W_real = 1280 + (zoom_w_size - 1280)*(t/ONE_FRAME_SEC)/ZOOM_FRAME
@@ -83,11 +79,9 @@ class Moving4:
                     H_real = 720
 
                 # 16:9 비율
-                print(cur_w, cur_h,'cur info')
                 w1, w2 = int(round(cur_w - W_real * w_ratio)), int(round(cur_w + W_real *(1-w_ratio)))
                 h1, h2 = int(round(cur_h - H_real * h_ratio)), int(round(cur_h + H_real *(1-h_ratio)))
                 # 확대된 범위를 넘어갔을때!
-                print(w1, w2, h1, h2,'infooo')
                 if h1>=0 and h2<=int(round(720 * self.ratio)) and w1>=0 and w2 <=int(round(1280 * self.ratio)):
                     print('---------cutteddddd')
                     frame_region = zoom_frame[h1:h2,w1:w2]
@@ -110,10 +104,8 @@ class Moving4:
                 zoom_w_size, zoom_h_size =  1280 * self.ratio, 720 * self.ratio 
                 # 시간초에 따라서 바뀌어야 함!
                 if self.transition_dir == 'small_to_big': # 앞에가 작고 뒤에가 큰거!
-                    print('----------small to big')
                     W_real = zoom_w_size - (zoom_w_size - 1280)*(t/ONE_FRAME_SEC)/ZOOM_FRAME
                     H_real = zoom_h_size - (zoom_h_size- 720)*(t/ONE_FRAME_SEC)/ZOOM_FRAME
-                    print(W_real, H_real, "W real H real")
                 elif self.transition_dir == 'big_to_small': # 되려 시간이 지나면서 사이즈가 더 커져야 resize를 하면 더 넓은 부분이 나옴
                     W_real = 1280 + (zoom_w_size - 1280)*(t/ONE_FRAME_SEC)/ZOOM_FRAME
                     H_real = 720 + (zoom_h_size- 720)*(t/ONE_FRAME_SEC)/ZOOM_FRAME
@@ -122,11 +114,9 @@ class Moving4:
                     H_real = 720
 
                 # 16:9 비율
-                print(cur_w, cur_h,'cur info')
                 w1, w2 = int(round(cur_w - W_real * w_ratio)), int(round(cur_w + W_real *(1-w_ratio)))
                 h1, h2 = int(round(cur_h - H_real * h_ratio)), int(round(cur_h + H_real *(1-h_ratio)))
                 # 확대된 범위를 넘어갔을때!
-                print(w1, w2, h1, h2,'infooo')
                 if h1>=0 and h2<=int(round(720 * self.ratio*AGAIN_ZOOM)) and w1>=0 and w2 <=int(round(1280 * self.ratio*AGAIN_ZOOM)):
                     print('---------cutteddddd')
                     frame_region = zoom_frame[h1:h2,w1:w2]
@@ -300,11 +290,9 @@ class ForceZoom:
                     H_real = 720
 
                 # 16:9 비율
-                print(cur_w, cur_h,'cur info')
                 w1, w2 = int(round(cur_w - W_real * w_ratio)), int(round(cur_w + W_real *(1-w_ratio)))
                 h1, h2 = int(round(cur_h - H_real * h_ratio)), int(round(cur_h + H_real *(1-h_ratio)))
                 # 확대된 범위를 넘어갔을때!
-                print(w1, w2, h1, h2,'infooo')
                 if h1>=0 and h2<=int(round(720 * self.ratio*AGAIN_ZOOM)) and w1>=0 and w2 <=int(round(1280 * self.ratio*AGAIN_ZOOM)):
                     print('---------cutteddddd')
                     frame_region = zoom_frame[h1:h2,w1:w2]
@@ -347,12 +335,10 @@ class ForceZoom2:
             cur_h_az = self.small_point[1] *ONE_ZOOM * self.ratio * AGAIN_ZOOM
             w1_az, w2_az = int(round(cur_w_az - 1280 * self.ratio * w_ratio)), int(round(cur_w_az + 1280 * self.ratio  *(1-w_ratio)))
             h1_az, h2_az = int(round(cur_h_az - 720 * self.ratio * h_ratio)), int(round(cur_h_az + 720 * self.ratio *(1-h_ratio)))
-            # print(w1_az, w2_az, h1_az, h2_az, '== az info')
             # 앞에서 안되어도 되는걸로 만들어질수도 있음...확대되어도 안되면 넘어가야지!
             # 원래건 안되고(not) 확대되는건 되어야 함!! 
             if not( h1>=0 and h2<=int(round(720 * self.ratio*ONE_ZOOM)) and w1>=0 and w2 <=int(round(1280 * self.ratio*ONE_ZOOM))) and \
                h1_az>=0 and h2_az<=int(round(720 * self.ratio*ONE_ZOOM*AGAIN_ZOOM)) and w1_az>=0 and w2_az<=int(round(1280 * self.ratio*AGAIN_ZOOM*ONE_ZOOM)):
-                print('### FORCEZOOM ONEZOOM AGAIN ZOOM')
                 # 사이즈가 넘어가서 확대를 했었다면, 나는 처음부터 다시 시작하자!
                 img_cv = cv2.resize(frame, dsize=(0, 0),fx=ONE_ZOOM * AGAIN_ZOOM, fy=ONE_ZOOM * AGAIN_ZOOM) # AGAIN_ZOOM 만큼 확대하기
                 zoom_frame = np.asarray(img_cv)
@@ -392,7 +378,6 @@ class ForceZoom2:
                     frame_region = frame
                 return frame_region
             else: # 그런 경우 아니었으면 확대 없이 return
-                print('@@@ FORCEZOOM just once')
                 # 사이즈가 넘어가서 확대를 했었다면, 나는 처음부터 다시 시작하자!
                 # 이때는 그냥 한번 확대해주자!
                 img_cv = cv2.resize(frame, dsize=(0, 0),fx=ONE_ZOOM, fy=ONE_ZOOM) # AGAIN_ZOOM 만큼 확대하기
@@ -433,24 +418,6 @@ class ForceZoom2:
                     frame_region = frame
                 return frame_region
 
-
-class MovingInv:
-    def __init__(self,small_point, big_point, ratio, transition_dir):
-        self.small_point = small_point
-        self.big_point = big_point
-        self.ratio = ratio
-        self.transition_dir = transition_dir
-    def __call__(self, get_frame, t):
-        # any process you want
-        frame = get_frame(t)
-        # AX = B
-        A = np.array(self.small_point)
-        B = np.array(self.big_point)
-        A_inv = np.linalg.inv(A)
-        X = A_inv@B # 변형시키는 식
-
-        
-        return changed_frame #변형된 frame
 
  
 def crosscut(videos_path="./video", option="random"):
@@ -568,18 +535,13 @@ def crosscut(videos_path="./video", option="random"):
                         clip_back = clip_back.fl(Moving5(refer_point_max, compare_point_max, compare_length_max/refer_length_max,'small_to_big',compare_degree_max-refer_degree_max))
                         clip_back = clip_back.resize((1280,720))
                     else:
-                        print('HERERERERERERERERERERERERERERERER')
                         clip_back = clip_back.fl(ForceZoom2(compare_point_max, refer_point_max, refer_length_max/compare_length_max,'small_to_big'))
                         clip_back = clip_back.resize((1280,720))
 
                     clip_back_not_fade = clip_back.subclip(0,clip_back.duration-ONE_FRAME_SEC*CROSS_FRAME)
                     clip_back_fade= clip_back.subclip(clip_back.duration-ONE_FRAME_SEC*CROSS_FRAME, clip_back.duration)
                     cross_clip = extracted_clips_array[current_idx].subclip(t-ONE_FRAME_SEC*CROSS_FRAME, t) # min_time을 넘어가면 안됨!
-                    # 뒤쪽이 확대되었따가 축소 되는 경우에는 cross fade 할 떄도 확대된 상태로 해야하니까!
-                    # if refer_length_max> compare_length_max and refer_length_max-compare_length_max < EYE_MIN_DIFF:   
-                    #     cross_clip = cross_clip.fl(Moving3(compare_point_max, refer_point_max, compare_length_max/refer_length_max, 'same'))
-                    #     cross_clip = cross_clip.resize((1280,720))
-                    # clip_back_fade = CompositeVideoClip([clip_back_fade, cross_clip.crossfadein(ONE_FRAME_SEC*CROSS_FRAME)])
+                  
                     con_clips.append(clip_back_not_fade)
                     con_clips.append(clip_back_fade)
                 else:
@@ -597,12 +559,10 @@ def crosscut(videos_path="./video", option="random"):
                         # pad_front = pad_front.fl(Moving2(compare_point_max, refer_point_max, compare_length_max/refer_length_max, 'big_to_small'))
                         pad_front = pad_front.fl(Moving5(compare_point_max, refer_point_max, refer_length_max/compare_length_max, 'big_to_small',refer_degree_max-compare_degree_max))
                         pad_front = pad_front.resize((1280,720))
-                        print('yooooooo')
                         # 앞에 영상 연속해서 틀기
                         cross_clip = extracted_clips_array[prev_idx].subclip(t, t+ONE_FRAME_SEC*CROSS_FRAME) # min_time을 넘어가면 안됨!
                         pad_front = CompositeVideoClip([pad_front, cross_clip.crossfadeout(ONE_FRAME_SEC*CROSS_FRAME)])
                     else: # 혹시 앞에서 크기가 안되어서 확대를 더 했다면?(실제 비율보다 AGAIN_ZOOM 만큼 확대했다면,)
-                        print('!!!Force Zoom in pad_front')
                         pad_front = pad_front.fl(ForceZoom2(refer_point_max, compare_point_max , compare_length_max/refer_length_max, 'big_to_small'))
                         pad_front = pad_front.resize((1280,720))
                         cross_clip = extracted_clips_array[prev_idx].subclip(t, t+ONE_FRAME_SEC*CROSS_FRAME) # min_time을 넘어가면 안됨!
