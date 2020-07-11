@@ -38,7 +38,7 @@ To install package
 
 -------------------
 ```bash
-    $ cd src
+    $ cd pose_detection
     $ python generate.py
 ```
 
