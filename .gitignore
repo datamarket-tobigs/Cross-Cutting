@@ -3,4 +3,4 @@ video/
 .idea/
 img/
 *.pyc
-
+*.xml
