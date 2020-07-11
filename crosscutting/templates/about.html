@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en-US">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <title>Cross Cutting</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#000000">
+    <meta name="description" content="Danny Garcia, senior front end engineer and designer at Apple. Building nice things for good people." />
+    <meta name="author" content="Danny Garcia" />
+    <script>document.documentElement.classList.remove('no-js');</script>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+    <!-- font awesome if optional but highly recommended -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+
+    <!-- jquery is required (any version) -->
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha256-pasqAKBDmFT4eHoN2ndd6lN370kFiGUFyTiUHWhU7k8=" crossorigin="anonymous"></script>
+
+    <link rel="stylesheet" href="{% static 'vendors/videoPlayer/rtop.videoPlayer.1.0.2.min.css' %}">
+</head>
+<body>
+<div class="canvas-container"></div>
+<main>
+    <h1 class="logo" style="z-index: 2"><a href="/">Cross-Cutting</a></h1>
+    <p class="intro type-primary">Hello! We are <a href="/">Cross-Cutting.</a> Tobigs team6.</p>
+    <section class="timeline">
+{#        <article class="timeline-entry" style="display: block; margin-bottom: 70px" id="makeSection">#}
+{#            <div style="padding: 0 50px; margin-bottom: 50px">#}
+{#                <h2>#}
+{#                    <a href="{% url 'home' %}">Home</a> |#}
+{#                    <a href="{% url 'video' %}">Videos</a> |#}
+{#                    <a href="{% url 'about' %}">About</a>#}
+{#                </h2>#}
+{#                <h1 class="type-primary"><a>Contributor</a></h1>#}
+{##}
+{#            </div>#}
+{#        </article>#}
+
+        <article class="timeline-entry" style="display: block; margin-bottom: 70px" id="makeSection">
+            <div style="padding: 0 50px; margin-bottom: 50px;">
+                <h1 class="type-primary"><a>Minjoon Jung</a></h1>
+                <div class="row">
+                    <img style="width: 49%; margin-top:30px"  src="https://sknife.s3.ap-northeast-2.amazonaws.com/%EB%AF%BC%EC%A4%80.png" alt="img">
+                </div>
+                <p class="timeline-description" style="margin-bottom: 50px">
+                    Name : Minjoon Jung<br>
+                    Birth : 1996.05.07<br>
+                    Email: minjoon507@gmail.com<br>
+                    Role : <br>
+                    Blog : <a href="https://github.com/minjoong507">https://github.com/minjoong507</a><br>
+                </p>
+            </div>
+        </article>
+
+        <article class="timeline-entry" style="display: block; margin-bottom: 70px" id="makeSection">
+            <div style="padding: 0 50px; margin-bottom: 50px;">
+                <h1 class="type-primary"><a>Seunghyun Lee</a></h1>
+                <div class="row">
+                    <img style="width: 49%; margin-top:30px"  src="https://sknife.s3.ap-northeast-2.amazonaws.com/%EC%8A%B9%ED%98%84" alt="img">
+                </div>
+                <p class="timeline-description" style="margin-bottom: 50px">
+                    Name : Seunghyun Lee<br>
+                    Birth : <br>
+                    Email: easter3163@naver.com<br>
+                    Role : <br>
+                    Blog : <a href="https://github.com/lsh3163">https://github.com/lsh3163</a><br>
+                </p>
+            </div>
+        </article>
+
+        <article class="timeline-entry" style="display: block; margin-bottom: 70px" id="makeSection">
+            <div style="padding: 0 50px; margin-bottom: 50px;">
+                <h1 class="type-primary"><a>Eunsun Sim</a></h1>
+                <div class="row">
+                    <img style="width: 49%; margin-top:30px"  src="https://sknife.s3.ap-northeast-2.amazonaws.com/%EC%9D%80%EC%84%A0.png" alt="img">
+                </div>
+                <p class="timeline-description" style="margin-bottom: 50px">
+                    Name : Eunsun Sim<br>
+                    Birth : 1998.08.10<br>
+                    Email: dmstjs8808@gmail.com<br>
+                    Role : <br>
+                    Blog : <a href="https://github.com/Eunsunn">https://github.com/Eunsunn</a><br>
+                </p>
+            </div>
+        </article>
+
+        <article class="timeline-entry" style="display: block; margin-bottom: 70px" id="makeSection">
+            <div style="padding: 0 50px; margin-bottom: 50px;">
+                <h1 class="type-primary"><a>Minho Jo</a></h1>
+                <div class="row">
+                    <img style="width: 49%; margin-top:30px"  src="https://sknife.s3.ap-northeast-2.amazonaws.com/minho.jpeg" alt="img">
+                </div>
+                <p class="timeline-description" style="margin-bottom: 50px">
+                    Name : Minho Jo<br>
+                    Birth : 1994.07.02<br>
+                    Email: dizwe2716@gmail.com<br>
+                    Role : <br>
+                    Blog : <a href="https://github.com/dizwe">https://github.com/dizwe</a><br>
+                </p>
+            </div>
+        </article>
+
+        <article class="timeline-entry" style="display: block; margin-bottom: 70px" id="makeSection">
+            <div style="padding: 0 50px; margin-bottom: 50px;">
+                <h1 class="type-primary"><a>Yujin Lee</a></h1>
+                <div class="row">
+                    <img style="width: 49%; margin-top:30px"  src="https://sknife.s3.ap-northeast-2.amazonaws.com/%EC%9C%A0%EC%A7%84.png" alt="img">
+                </div>
+                <p class="timeline-description" style="margin-bottom: 50px">
+                    Name : Yujin Lee<br>
+                    Birth : 1996.01.05<br>
+                    Email: daebaq27@gmail.com<br>
+                    Role : <br>
+                    Blog : <a href="https://github.com/YoojLee">https://github.com/YoojLee</a><br>
+                </p>
+            </div>
+        </article>
+
+        <article class="timeline-entry" style="display: block; margin-bottom: 70px" id="makeSection">
+            <div style="padding: 0 50px; margin-bottom: 50px;">
+                <h1 class="type-primary"><a>Hyebin Choi</a></h1>
+                <div class="row">
+                    <img style="width: 49%; margin-top:30px"  src="https://sknife.s3.ap-northeast-2.amazonaws.com/%ED%98%9C%EB%B9%88.png" alt="img">
+                </div>
+                <p class="timeline-description" style="margin-bottom: 50px">
+                    Name : Hyebin Choi<br>
+                    Birth : 2000.01.04 <br>
+                    Email: hyebly9117@gmail.com <br>
+                    Role : <br>
+                    Blog : <a href="https://github.com/lilly9117">https://github.com/lilly9117</a><br>
+                </p>
+            </div>
+        </article>
+
+
+    </section>
+    <footer>
+        <div class="footer-content">
+            <input type="file" multiple id="fileInput" style="display: none">
+            <p>You can find the source code on our <a href="https://github.com/Tobigs-Team06/Cross-Cutting">Github</a>.</p>
+        </div>
+    </footer>
+</main>
+<script type="text/javascript" src="{% static 'js/main.built.js' %}"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="{% static 'vendors/aws-sdk/aws-sdk.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'vendors/videoPlayer/rtop.videoPlayer.1.0.2.min.js' %}"></script>
+<script>
+    $(document).ready(function(){
+        var vid = $('#my_video').RTOP_VideoPlayer({
+            showFullScreen: true,
+            showTimer: true,
+            showSoundControl: true
+        });
+    });
+</script>
+</body>
+</html>
