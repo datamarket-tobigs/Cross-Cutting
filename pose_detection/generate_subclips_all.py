@@ -7,24 +7,21 @@ class generate_subclips():
         self.min_time = 1000.0
         self.extracted_clips_array = []
 
-
-    def crosscut(self, videos_path):
+    def edit_video_sink(self, videos_path):
         audioclip = None
         #                0  1  2  3  4  5   6  7  8  9  10
         # VIDEO SONG START TIME ARRAY
-
         # VIDEO ALIGNMENT -> SLICE START TIME
+
         for i in range(len(os.listdir(videos_path))):
             video_path = os.path.join(videos_path, sorted(os.listdir(videos_path))[i])
             clip = VideoFileClip(video_path)
             clip = clip.subclip(self.start_times[i], clip.duration)
-
-            if self.min_time > clip.duration:
-                audioclip = clip.audio
-                min_time = clip.duration
-                print(video_path, clip.fps, clip.duration)
             self.extracted_clips_array.append(clip)
         # print(len(extracted_clips_array))
+
+
+    def make_subclips(self):
         for i in range(6):
             os.mkdir("subclips/" + str(i * 10))
 
@@ -37,7 +34,7 @@ class generate_subclips():
                 next_t = min(t + 10, self.min_time)
 
                 clip = self.extracted_clips_array[video_idx].subclip(cur_t, next_t)
-                clip.write_videofile("subclips/" + str(video_idx * 10) + "/" + str(t) + " " + str(video_idx) + ".mp4")
+                # clip.write_videofile("subclips/" + str(video_idx * 10) + "/" + str(t) + " " + str(video_idx) + ".mp4")
                 t = next_t
 
     def get_extracted_clip_list(self):
