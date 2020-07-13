@@ -13,7 +13,7 @@ WINDOW_TIME = 10
 PADDED_TIME = 3 # 얼굴이 클로즈업 된게 있으면 계속 클로즈업 된 부분만 찾으므로 3초정도 띄어준다.
 ZOOM_FRAME =20 # 얼굴 확대할때  시간
 CROSS_FRAME = 4 #얼굴 스르르 시간
-ONE_ZOOM = 1.3 # 회전할 때 검은 부분 최대한 줄이기 위해서 확대하는 비율 일단 안씀
+ONE_ZOOM = 1.2 # 회전할 때 검은 부분 최대한 줄이기 위해서 확대하는 비율 일단 안씀
 AGAIN_ZOOM = 1.15
 ROTATE_MAX = 7
 
@@ -33,7 +33,7 @@ def distance(reference_clip, clip):
     return min_diff, min_idx, refer_length, refer_degree, compare_length, compare_degree, refer_point, compare_point
 
 # 더 작은 쪽에서 하는 것!
-class Moving4:
+class MovingWithoutDefalutZoom:
     def __init__(self,small_point, big_point, ratio, transition_dir, rotate_degree):
         self.small_point = small_point[0]
         self.big_point = big_point[0]
@@ -134,7 +134,7 @@ class Moving4:
                 return frame_region
 
 # Rotate 할 때 빈 바리 메꾸기 위해서 기본적으로 확대하기!
-class Moving5:
+class Moving:
     def __init__(self,small_point, big_point, ratio, transition_dir, rotate_degree):
         self.small_point = small_point[0]
         self.big_point = big_point[0]
@@ -176,7 +176,7 @@ class Moving5:
             h1, h2 = int(round(cur_h - 720 * self.ratio * h_ratio)), int(round(cur_h + 720 * self.ratio *(1-h_ratio)))
             if h1>=0 and h2<=int(round(720 * self.ratio * ONE_ZOOM)) and w1>=0 and w2 <=int(round(1280 * self.ratio * ONE_ZOOM)):
                 # 시간초에 따라서 바뀌어야 함!
-                zoom_w_size, zoom_h_size =  1280 * self.ratio, 720 * self.ratio 
+                zoom_w_size, zoom_h_size =  1280 * self.ratio*ONE_ZOOM, 720 * self.ratio*ONE_ZOOM 
                 if self.transition_dir == 'small_to_big': # 앞에가 작고 뒤에가 큰거!
                     W_real = zoom_w_size - (zoom_w_size - 1280)*(t/ONE_FRAME_SEC)/ZOOM_FRAME
                     H_real = zoom_h_size - (zoom_h_size- 720)*(t/ONE_FRAME_SEC)/ZOOM_FRAME
@@ -212,7 +212,7 @@ class Moving5:
                 h_ratio = self.big_point[1]/720 # 그 비율만큼 위쪽 마이너스
                 
                 # 사이즈 자체는 확대하지 않아야 한다!!
-                zoom_w_size, zoom_h_size =  1280 * self.ratio, 720 * self.ratio 
+                zoom_w_size, zoom_h_size =  1280 * self.ratio * ONE_ZOOM * AGAIN_ZOOM, 720 * self.ratio * ONE_ZOOM * AGAIN_ZOOM
                 # 시간초에 따라서 바뀌어야 함!
                 if self.transition_dir == 'small_to_big': # 앞에가 작고 뒤에가 큰거!
                     W_real = zoom_w_size - (zoom_w_size - 1280)*(t/ONE_FRAME_SEC)/ZOOM_FRAME
@@ -242,7 +242,7 @@ class Moving5:
 
 # 이건 사이즈가 안맞아서 한번 더 확대 했을때 다른 쪽 영상을 처리하는 Class
 # 더 큰쪽에서 하는 것!!
-class ForceZoom:
+class ForceZoomWithoutDefaultZoom:
     def __init__(self,small_point, big_point, ratio, transition_dir):
         self.small_point = small_point[0]
         self.big_point = big_point[0]
@@ -317,7 +317,7 @@ class ForceZoom:
                 return frame
 
 # 이건 사이즈가 안맞아서 한번 더 확대 했을때 다른 쪽 영상을 처리하는 Class
-class ForceZoom2:
+class ForceZoom:
     def __init__(self,small_point, big_point, ratio, transition_dir):
         self.small_point = small_point[0]
         self.big_point = big_point[0]
@@ -553,7 +553,7 @@ def crosscut(videos_path="./video", option="random"):
                 if abs(compare_length_max-refer_length_max) < EYE_MIN_DIFF and abs(compare_degree_max-refer_degree_max) < ROTATE_MAX:
                     if compare_length_max> refer_length_max and compare_length_max-refer_length_max < EYE_MIN_DIFF:
                         # clip_back = clip_back.fl(Moving2(refer_point_max, compare_point_max, refer_length_max/compare_length_max,'small_to_big'))
-                        clip_back = clip_back.fl(Moving4(refer_point_max, compare_point_max, compare_length_max/refer_length_max,'small_to_big',compare_degree_max-refer_degree_max))
+                        clip_back = clip_back.fl(Moving(refer_point_max, compare_point_max, compare_length_max/refer_length_max,'small_to_big',compare_degree_max-refer_degree_max))
                         print('---------------------efaegefeg---------------------gefqwgqwe')
                         clip_back = clip_back.resize((1280,720))
                     else:
@@ -581,7 +581,7 @@ def crosscut(videos_path="./video", option="random"):
                     if refer_length_max> compare_length_max and refer_length_max-compare_length_max < EYE_MIN_DIFF:
                         # 더 작아져야하쥐!(결국 확대?)
                         # pad_front = pad_front.fl(Moving2(compare_point_max, refer_point_max, compare_length_max/refer_length_max, 'big_to_small'))
-                        pad_front = pad_front.fl(Moving4(compare_point_max, refer_point_max, refer_length_max/compare_length_max, 'big_to_small',refer_degree_max-compare_degree_max))
+                        pad_front = pad_front.fl(Moving(compare_point_max, refer_point_max, refer_length_max/compare_length_max, 'big_to_small',refer_degree_max-compare_degree_max))
                         pad_front = pad_front.resize((1280,720))
                         # 앞에 영상 연속해서 틀기
                         cross_clip = extracted_clips_array[prev_idx].subclip(t, t+ONE_FRAME_SEC*CROSS_FRAME) # min_time을 넘어가면 안됨!
@@ -590,7 +590,7 @@ def crosscut(videos_path="./video", option="random"):
                         pad_front = pad_front.fl(ForceZoom(refer_point_max, compare_point_max , compare_length_max/refer_length_max, 'big_to_small'))
                         pad_front = pad_front.resize((1280,720))
                         cross_clip = extracted_clips_array[prev_idx].subclip(t, t+ONE_FRAME_SEC*CROSS_FRAME) # min_time을 넘어가면 안됨!
-                        cross_clip = cross_clip.fl(Moving4(refer_point_max, compare_point_max, compare_length_max/refer_length_max, 'same',compare_degree_max-refer_degree_max))
+                        cross_clip = cross_clip.fl(Moving(refer_point_max, compare_point_max, compare_length_max/refer_length_max, 'same',compare_degree_max-refer_degree_max))
                         pad_front = CompositeVideoClip([pad_front, cross_clip.crossfadeout(ONE_FRAME_SEC*CROSS_FRAME)])
 
                     con_clips.append(pad_front)
