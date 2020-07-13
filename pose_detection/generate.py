@@ -7,7 +7,7 @@ from generate_subclips_all import generate_subclips
 class generate_pose_detection():
 
     def __init__(self):
-        self.video_dir = "../video/"
+        self.video_dir = "video/"
         self.video_list = []
         self.edit_time = []
         self.selected_video = []
@@ -38,17 +38,32 @@ class generate_pose_detection():
             start_time += 10
 
         final_clip = concatenate_videoclips(self.subclip_list)
+        final_audio = self.full_video_list[0].subclip(0, final_clip.duration).audio
+        final_clip.audio = final_audio
         final_clip.write_videofile("pose_detection_mixed_video.mp4")
 
     def run(self):
         self.make_full_video()
         # print(type(self.full_video_list[0]))
-        result = [[2, 2],
+        result = [[2, 1],
+                  [1, 0],
+                  [7, 1],
+                  [1, 0],
+                  [2, 4],
+                  [0, 8],
+                  [5, 3],
+                  [4, 1],
+                  [0, 7],
+                  [1, 0],
                   [1, 1],
-                  [7, 2],
-                  [1, 1],
-                  [2, 5],
-                  [0, 9]]
+                  [3, 7],
+                  [0, 3],
+                  [1, 7],
+                  [1, 0],
+                  [4, 1],
+                  [7, 6],
+                  [7, 0],
+                  [4, 1]]
 
         time_list = list(np.array(result)[:, 0])
         video_list = list(np.array(result)[:, 1])
