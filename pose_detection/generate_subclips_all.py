@@ -6,9 +6,9 @@ class generate_subclips():
         self.start_times = [13.0, 1.5, 0.5, 0.5, 1.0, 0.5, 1.0, 6.5, 0, 0.5]
         self.min_time = 1000.0
         self.extracted_clips_array = []
+        self.audioclip = None
 
     def edit_video_sink(self, videos_path):
-        audioclip = None
         #                0  1  2  3  4  5   6  7  8  9  10
         # VIDEO SONG START TIME ARRAY
         # VIDEO ALIGNMENT -> SLICE START TIME
@@ -20,7 +20,7 @@ class generate_subclips():
             self.extracted_clips_array.append(clip)
 
             if self.min_time > clip.duration:
-                audioclip = clip.audio
+                self.audioclip = clip.audio
                 self.min_time = clip.duration
 
         # print(len(extracted_clips_array))
