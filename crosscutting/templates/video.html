@@ -53,6 +53,16 @@
 
         <article class="timeline-entry" style="display: block; margin-bottom: 30px" id="makeSection">
             <div style="padding: 0 50px; margin-bottom: 50px">
+                <h1 class="type-primary"><a>Result</a></h1>
+                <p class="timeline-description" style="margin-bottom: 50px; text-indent: 1em">
+                    지금은 피에스타인데 다른 영상으로!ㅇㅇ
+                </p>
+                <div class="myVideo" id="my_video3" data-video="https://sknife.s3.ap-northeast-2.amazonaws.com/izone_fiesta_final.mp4" data-poster= "https://sknife.s3.ap-northeast-2.amazonaws.com/2.png" data-type='video/mp4'></div>
+            </div>
+        </article>
+
+        <article class="timeline-entry" style="display: block; margin-bottom: 30px" id="makeSection">
+            <div style="padding: 0 50px; margin-bottom: 50px">
                 <h1 class="type-primary"><a>Comment</a></h1>
 {#                <p class="timeline-description" style="margin-bottom: 50px; text-indent: 1em">#}
 {#                    context#}
@@ -101,6 +111,13 @@
     });
     $(document).ready(function(){
         var vid = $('#my_video2').RTOP_VideoPlayer({
+            showFullScreen: true,
+            showTimer: true,
+            showSoundControl: true
+        });
+    });
+    $(document).ready(function(){
+        var vid = $('#my_video3').RTOP_VideoPlayer({
             showFullScreen: true,
             showTimer: true,
             showSoundControl: true
