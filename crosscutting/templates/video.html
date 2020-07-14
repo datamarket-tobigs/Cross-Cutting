@@ -24,19 +24,39 @@
 <main>
     <h1 class="logo" style="z-index: 2"><a href="/">Cross-Cutting</a></h1>
     <p class="intro type-primary">Create a mixed music video with your favorite singer!<br>It is very easy with <a href="/">Cross-Cutting.</a></p>
+
     <section class="timeline">
-        <article class="timeline-entry" style="display: block" id="makeSection">
+        <article class="timeline-entry" style="display: block; margin-bottom: 30px" id="makeSection">
             <div style="padding: 0 50px; margin-bottom: 50px">
                 <h2>
                     <a href="{% url 'home' %}">Home</a> |
                     <a href="{% url 'video' %}">Videos</a> |
                     <a href="{% url 'about' %}">About</a>
                 </h2>
-                <h1 class="type-primary"><a>result</a></h1>
-                <p class="timeline-description" style="margin-bottom: 50px">
-                    Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
+                <h1 class="type-primary"><a>Result</a></h1>
+                <p class="timeline-description" style="margin-bottom: 50px; text-indent: 1em">
+                    설명 좌라락
                 </p>
                 <div class="myVideo" id="my_video" data-video="http://sknife.s3.ap-northeast-2.amazonaws.com/face_detection_video.mp4" data-poster="{% static 'video/thumbnail.png' %}" data-type='video/mp4'></div>
+            </div>
+        </article>
+
+        <article class="timeline-entry" style="display: block; margin-bottom: 30px" id="makeSection">
+            <div style="padding: 0 50px; margin-bottom: 50px">
+                <h1 class="type-primary"><a>Result</a></h1>
+                <p class="timeline-description" style="margin-bottom: 50px; text-indent: 1em">
+                    pose 기반 피에스타 video
+                </p>
+                <div class="myVideo" id="my_video2" data-video="https://sknife.s3.ap-northeast-2.amazonaws.com/izone_fiesta_final.mp4" data-poster="{% static 'video/1.png' %}" data-type='video/mp4'></div>
+            </div>
+        </article>
+
+        <article class="timeline-entry" style="display: block; margin-bottom: 30px" id="makeSection">
+            <div style="padding: 0 50px; margin-bottom: 50px">
+                <h1 class="type-primary"><a>Comment</a></h1>
+{#                <p class="timeline-description" style="margin-bottom: 50px; text-indent: 1em">#}
+{#                    context#}
+{#                </p>#}
                 <div id="disqus_thread" style="margin-top: 30px"></div>
                 <script>
 
@@ -45,8 +65,8 @@
                      *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
                     /*
                     var disqus_config = function () {
-                    this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
-                    this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+                        this.page.url = http://www.sknife.kro.kr/video/;  // Replace PAGE_URL with your page's canonical URL variable
+                        this.page.identifier = http://www.sknife.kro.kr/video/; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
                     };
                     */
                     (function() { // DON'T EDIT BELOW THIS LINE
@@ -79,6 +99,14 @@
             showSoundControl: true
         });
     });
+    $(document).ready(function(){
+        var vid = $('#my_video2').RTOP_VideoPlayer({
+            showFullScreen: true,
+            showTimer: true,
+            showSoundControl: true
+        });
+    });
 </script>
+{#<script id="dsq-count-scr" src="//www-sknife-kro-kr-1.disqus.com/count.js" async></script>#}
 </body>
 </html>
