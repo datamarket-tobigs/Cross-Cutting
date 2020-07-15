@@ -42,12 +42,12 @@ To install package
     $ python generate.py
 ```
 
-#### Run generate face based mixed video code
+#### Run generate face embedding mixed video code
 
 -------------------
 ```bash
-    $ cd src
-    $ python generate.py
+    $ cd face_embedding/
+    $ python generate_embedding.py
 ```
 
 #### Run generate frame based mixed video code
