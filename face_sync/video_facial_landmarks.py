@@ -3,7 +3,7 @@
 # python video_facial_landmarks.py --shape-predictor shape_predictor_68_face_landmarks.dat
 # python video_facial_landmarks.py --shape-predictor shape_predictor_68_face_landmarks.dat --picamera 1
 
-# 전체 참고 
+# 전체 참고
 # https://www.pyimagesearch.com/2017/04/03/facial-landmarks-dlib-opencv-python/
 
 # import the necessary packages
@@ -29,7 +29,7 @@ def calculate_distance(reference_clip, compare_clip):
 	# ap.add_argument("-r", "--picamera", type=int, default=-1,
 	# 	help="whether or not the Raspberry Pi camera should be used")
 	# args = vars(ap.parse_args())
-	
+
 	# initialize dlib's face detector (HOG-based) and then create
 	# the facial landmark predictor
 	print("[INFO] loading facial landmark predictor...")
@@ -64,11 +64,11 @@ def calculate_distance(reference_clip, compare_clip):
 			# if not ret:
 			# 	print("Error")
 			# 	break
-			
+
 			# width 높이면 더 판별 잘되지만, computational power 높음
 			# The benefit of increasing the resolution of the input image prior to face detection is that it may allow us to detect more faces in the imag
 			# !!! 아니면 너무 느려지면 640으로 낮춰서 해도 괜찮을듯(1280은 너무 세세한거까지 잡음)
-			frame = imutils.resize(frame, width=640) ### !!!! 여기 width 계산도 중요하다!(실제 좌표로 옮겨야 하니까) 
+			frame = imutils.resize(frame, width=640) ### !!!! 여기 width 계산도 중요하다!(실제 좌표로 옮겨야 하니까)
 			gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
 			# detect faces in the grayscale frame
@@ -90,7 +90,7 @@ def calculate_distance(reference_clip, compare_clip):
 				every_frame_info.append(shape)
 			else:
 				every_frame_info.append([])
-			
+
 		clips_frame_info.append(np.array(every_frame_info))
 
 	cv2.destroyAllWindows()
@@ -128,12 +128,12 @@ def calculate_distance(reference_clip, compare_clip):
 			dist_arr.append(total_diff)
 
 			# Minimize max distance in 3 frames
-			if i < 2 or (i + 2) > (len(dist_arr)-1): # 2번째 frame부터 계산
+			if i < 2: # 2번째 frame부터 계산
 				continue
-			if None in dist_arr[i-2:i+2]: # None이 있으면 pass
+			if None in dist_arr[i-2:i+1]: # None이 있으면 pass
 				continue
 
-			local_max = np.max(dist_arr[i-2:i+2]) # 최근 거리엥서 최대한 멀리 떨어진 값이 최소가 되어야 한다(얼굴 전환 적게)
+			local_max = np.max(dist_arr[i-2:i+1]) # 최근 거리엥서 최대한 멀리 떨어진 값이 최소가 되어야 한다(얼굴 전환 적게)
 			if min_diff > local_max:
 				min_diff = local_max
 				refer_length = refer_length_temp
