@@ -127,13 +127,13 @@ def calculate_distance(reference_clip, compare_clip):
 			total_diff = left_eye + right_eye
 			dist_arr.append(total_diff)
 
-			# Minimize max distance in 5 frames
-			if i < 4: # 4번째 frame부터 계산
+			# Minimize max distance in 3 frames
+			if i < 2 or (i + 2) > (len(dist_arr)-1): # 2번째 frame부터 계산
 				continue
-			if None in dist_arr[i-4:i+1]: # None이 있으면 pass
+			if None in dist_arr[i-2:i+2]: # None이 있으면 pass
 				continue
 
-			local_max = np.max(dist_arr[i-4:i+1])
+			local_max = np.max(dist_arr[i-2:i+2]) # 최근 거리엥서 최대한 멀리 떨어진 값이 최소가 되어야 한다(얼굴 전환 적게)
 			if min_diff > local_max:
 				min_diff = local_max
 				refer_length = refer_length_temp
