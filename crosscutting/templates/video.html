@@ -56,7 +56,9 @@
 {#                <p class="timeline-description" style="margin-bottom: 50px; text-indent: 1em">#}
 {#                </p>#}
 {#                이거 썸네일 바꿔야해요#}
-                <div class="myVideo" id="fifth_season_pose_full_video1" data-video="https://sknife.s3.ap-northeast-2.amazonaws.com/full+video/fifth_season_full_video_pose.mp4" data-poster= "https://sknife.s3.ap-northeast-2.amazonaws.com/thumbnail/Fifth+season_face3.PNG" data-type='video/mp4'></div>
+                <div class="myVideo" id="fifth_season_pose_full_video1" style="margin-bottom: 70px" data-video="https://sknife.s3.ap-northeast-2.amazonaws.com/full+video/fifth_season_full_video_pose.mp4" data-poster= "https://sknife.s3.ap-northeast-2.amazonaws.com/thumbnail/Fifth+season+pose1.png" data-type='video/mp4'></div>
+                <div class="myVideo" id="fifth_season_face_full_video1" style="margin-bottom: 70px" data-video="https://sknife.s3.ap-northeast-2.amazonaws.com/full+video/fifth_season_face_full_video.mp4" data-poster= "https://sknife.s3.ap-northeast-2.amazonaws.com/thumbnail/Fifth+season_face2.PNG" data-type='video/mp4'></div>
+
             </div>
         </article>
 
@@ -79,7 +81,7 @@
                     */
                     (function() { // DON'T EDIT BELOW THIS LINE
                         var d = document, s = d.createElement('script');
-                        s.src = 'https://www-sknife-kro-kr-1.disqus.com/embed.js';
+                        s.src = 'https://www-sknife-kro-kr.disqus.com/embed.js';
                         s.setAttribute('data-timestamp', +new Date());
                         (d.head || d.body).appendChild(s);
                     })();
@@ -116,6 +118,13 @@
     });
     $(document).ready(function(){
         var vid = $('#fifth_season_pose_full_video1').RTOP_VideoPlayer({
+            showFullScreen: true,
+            showTimer: true,
+            showSoundControl: true
+        });
+    });
+    $(document).ready(function(){
+        var vid = $('#fifth_season_face_full_video1').RTOP_VideoPlayer({
             showFullScreen: true,
             showTimer: true,
             showSoundControl: true
