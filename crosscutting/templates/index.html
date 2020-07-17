@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en-US">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <title>Cross Cutting</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#000000">
+    <meta name="description" content="Danny Garcia, senior front end engineer and designer at Apple. Building nice things for good people." />
+    <meta name="author" content="Danny Garcia" />
+    <script>document.documentElement.classList.remove('no-js');</script>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+	<!-- font awesome if optional but highly recommended -->
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+
+	<!-- jquery is required (any version) -->
+	<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha256-pasqAKBDmFT4eHoN2ndd6lN370kFiGUFyTiUHWhU7k8=" crossorigin="anonymous"></script>
+
+    <link rel="stylesheet" href="{% static 'vendors/videoPlayer/rtop.videoPlayer.1.0.2.min.css' %}">
+</head>
+<body>
+<div class="canvas-container"></div>
+<main>
+    <h1 class="logo" style="z-index: 2"><a href="/">Cross-Cutting</a></h1>
+    <p class="intro type-primary">Create a mixed music video with your favorite singer!<br>It is very easy with <a href="/">Cross-Cutting.</a></p>
+    <section class="timeline">
+        <article class="timeline-entry" style="display: block; margin-bottom: 70px" id="makeSection">
+            <div style="padding: 0 50px; margin-bottom: 50px">
+                <h2>
+                    <a href="{% url 'home' %}">Home</a> |
+                    <a href="{% url 'video' %}">Videos</a> |
+                    <a href="{% url 'clips' %}">Clips</a> |
+                    <a href="{% url 'about' %}">About</a>
+                </h2>
+                <h1 class="type-primary"><a>Source</a></h1>
+                <p class="timeline-description" style="margin-bottom: 50px; text-indent: 1em">
+                    인공지능 기반 교차편집 자동생성 솔루션으로 뮤직비디오 제작 비용 문제 해결과 고객들에게 더 다양한 무대 영상을 제공합니다. 중소 기획사와 1인 크리에이터에게 자동 교차편집 생성 시스템을 제공해 비용에 대한 부담을 해소하고 다양한 컨텐츠를 제공합니다.
+                </p>
+            </div>
+        </article>
+
+        <article class="timeline-entry" style="display: block;margin-bottom: 70px" id="makeSection">
+            <div style="padding: 0 50px">
+                <h1 class="type-primary"><a>Result</a></h1>
+                <div class="row">
+                    <img style="width: 49%; margin-bottom: 15px"  src="https://sknife.s3.ap-northeast-2.amazonaws.com/gif/fiesta1_(1).gif" alt="">
+                    <img style="width: 49%; margin-bottom: 15px"  src="https://sknife.s3.ap-northeast-2.amazonaws.com/gif/fifth_gif_2-min.gif" alt="">
+                    <img style="width: 49%"  src="https://sknife.s3.ap-northeast-2.amazonaws.com/gif/wan_short_3-min.gif" alt="">
+                    <img style="width: 49%"  src="https://sknife.s3.ap-northeast-2.amazonaws.com/gif/wanna_gif_2-min.gif" alt="">
+                </div>
+            </div>
+        </article>
+
+        <article class="timeline-entry" style="display: block;margin-bottom: 70px" id="makeSection">
+            <div style="padding: 0 50px">
+                <h1 class="type-primary"><a>Why we need Cross Cutting?</a></h1>
+                <p class="timeline-description" style="margin-bottom: 50px; text-indent: 1em">
+                    기존 교차편집은 사람이 시간에 맞춰 편집을 해야하는 어려움이 있었습니다. 하지만 저희는 딥러닝을 이용한 얼굴 및 포즈 탐지 모델을 이용한 비디오 이해를 통하여 아이돌 무대 자동 교차편집 알고리즘을 개발하였습니다. 프레임별 유사도를 기반한 교차편집 생성은 마치 한 영상인 듯한 자연스러운 영상을 고개들에게 제공할 것입니다.
+                </p>
+
+            </div>
+        </article>
+
+    </section>
+    <footer>
+        <div class="footer-content">
+            <input type="file" multiple id="fileInput" style="display: none">
+            <p>You can find the source code on our <a href="https://github.com/Tobigs-Team06/Cross-Cutting">Github</a>.</p>
+        </div>
+    </footer>
+</main>
+<script type="text/javascript" src="{% static 'js/main.built.js' %}"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="{% static 'vendors/aws-sdk/aws-sdk.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'vendors/videoPlayer/rtop.videoPlayer.1.0.2.min.js' %}"></script>
+<script>
+</script>
+</body>
+</html>
