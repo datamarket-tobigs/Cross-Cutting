@@ -46,7 +46,7 @@ To install package
 
 -------------------
 ```bash
-    $ cd face_embedding/
+    $ cd face_embedding
     $ python generate_embedding.py
 ```
 
