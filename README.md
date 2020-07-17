@@ -50,13 +50,13 @@ To install package
     $ python generate_embedding.py
 ```
 
-#### Run generate frame based mixed video code
+#### Run generate face based mixed video code
 
 -------------------
 
 ```bash
-    $ cd src
-    $ python generate.py
+    $ cd face_sync
+    $ python generate_func_test.py
 ```
 
 ## Contribute
@@ -64,6 +64,7 @@ To install package
 ----------------
 * Issue Tracker: https://github.com/Tobigs-Team06/Cross-Cutting/issues
 * Source Code: https://github.com/Tobigs-Team06/Cross-Cutting/src
+* Pull Requests : https://github.com/Tobigs-Team06/Cross-Cutting/pulls
 
 ## Contribution guidelines
 
