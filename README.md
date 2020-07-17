@@ -20,7 +20,6 @@ To install package
 ```bash
     $ git clone https://github.com/Tobigs-Team06/Cross-Cutting.git
     $ cd CrossCutting
-    $ pip install -r requirement.txt
 ```
 
 ## Getting Started in Web
@@ -28,6 +27,7 @@ To install package
 ------------------------------
 ```bash
     $ cd crosscutting
+    $ pip install -r requirement.txt
     $ python manage.py makemigrations
     $ python manage.py migrate
     $ python manage.py runserver 0.0.0.0:8000
@@ -56,6 +56,7 @@ To install package
 
 ```bash
     $ cd face_sync
+    $ pip install -r requirement.txt
     $ python generate_func_test.py
 ```
 
