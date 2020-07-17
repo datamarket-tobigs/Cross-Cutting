@@ -37,7 +37,6 @@
                 <h1 class="type-primary"><a>Fiesta - izone </a></h1>
 {#                <p class="timeline-description" style="margin-bottom: 50px; text-indent: 1em">#}
 {#                </p>#}
-                <div class="myVideo" style="margin-bottom: 50px" id="fiesta_clip1" data-video="https://sknife.s3.ap-northeast-2.amazonaws.com/clip/fiesta_clip1.mp4" data-poster="https://sknife.s3.ap-northeast-2.amazonaws.com/thumbnail/fiesta_pose1.PNG" data-type='video/mp4'></div>
                 <div class="myVideo" id="fiesta_clip2" data-video="https://sknife.s3.ap-northeast-2.amazonaws.com/clip/fiesta_clip2.mp4" data-poster="https://sknife.s3.ap-northeast-2.amazonaws.com/thumbnail/Fiesta_pose2.PNG" data-type='video/mp4'></div>
 
             </div>
@@ -105,13 +104,6 @@
 <script type="text/javascript" src="{% static 'vendors/aws-sdk/aws-sdk.min.js' %}"></script>
 <script type="text/javascript" src="{% static 'vendors/videoPlayer/rtop.videoPlayer.1.0.2.min.js' %}"></script>
 <script>
-    $(document).ready(function(){
-        var vid = $('#fiesta_clip1').RTOP_VideoPlayer({
-            showFullScreen: true,
-            showTimer: true,
-            showSoundControl: true
-        });
-    });
     $(document).ready(function(){
         var vid = $('#fiesta_clip2').RTOP_VideoPlayer({
             showFullScreen: true,
