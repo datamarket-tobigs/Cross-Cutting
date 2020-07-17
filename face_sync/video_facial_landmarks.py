@@ -19,7 +19,7 @@ import cv2
 import math
 import numpy as np
 
-skip_frame_rate = 2
+skip_frame_rate = 1
 
 def calculate_distance(reference_clip, compare_clip):
 	# construct the `argument parse and parse the arguments
