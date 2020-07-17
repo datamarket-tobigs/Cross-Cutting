@@ -9,7 +9,7 @@
 
 **Cross-Cutting** is a service that makes it easy for anyone to make mixed music video
 
-Cross-Cutting is an open source project developed by Tobigs Team6 using MoviePy, AlphaPose, etc..
+Cross-Cutting is an open source project developed by Tobigs Team6 using MoviePy, Keras-facenet, OpenCV, etc..
 
 Cross-Cutting is made in Python 3 version.
 
@@ -27,7 +27,7 @@ To install package
 ------------------------------
 ```bash
     $ cd crosscutting
-    $ pip install -r requirement.txt
+    $ pip install -r requirements.txt
     $ python manage.py makemigrations
     $ python manage.py migrate
     $ python manage.py runserver 0.0.0.0:8000
@@ -39,6 +39,7 @@ To install package
 -------------------
 ```bash
     $ cd pose_detection
+    $ pip install -r requirements.txt
     $ python generate.py
 ```
 
@@ -47,6 +48,7 @@ To install package
 -------------------
 ```bash
     $ cd face_embedding
+    $ pip install -r requirements.txt
     $ python generate_embedding.py
 ```
 
@@ -56,7 +58,7 @@ To install package
 
 ```bash
     $ cd face_sync
-    $ pip install -r requirement.txt
+    $ pip install -r requirements.txt
     $ python generate_func_test.py
 ```
 
