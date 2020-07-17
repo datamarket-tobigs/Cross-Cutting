@@ -12,3 +12,5 @@ class VideoView(TemplateView):
 class AboutView(TemplateView):
     template_name = 'about.html'
 
+class ClipsView(TemplateView):
+    template_name = 'clip.html'
