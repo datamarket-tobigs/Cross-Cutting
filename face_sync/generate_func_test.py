@@ -8,7 +8,8 @@ import cv2
 
 
 ONE_FRAME_SEC = 0.03336666666666588 # 29.97002997002997fps의 역수! 한 프레임당 시간을 계싼해서 프레임 id만 알면 현재 시간 알수 있도록 함# 0.03336666666666588??
-EYE_MIN_DIFF = 65 # 이 거리 이상이면, crossfade 전환 하지 않는다.
+EYE_MIN_DIFF = 65 # 두 영상의 눈 크기 차이가 거리 이상이면, crossfade 전환 하지 않는다.
+TOTAL_MIN_DIFF = 100 # 두 영상의 눈 거리가 이 이상이면 전환 자체를 시도하지 않는다(엉뚱한데 옮겨가는거 피하기)
 ROTATE_MAX = 7 # 각 도 차이가 이 값 이상이면, crossfade 전환하지 않는다.
 WINDOW_TIME = 10 # WINDOW_TIME 초 안에서 최소 거리를 찾는다. 얼굴이 겹치는 부분이 없다면, WINDOW_TIME 만큼 자르고 radom으로 다음 영상을 재생한다.
 PADDED_TIME = 3 # 최소 시간으로 영상을 자른 뒤 PADDED_TIME 만큼은 얼굴 거리를 계산하지 않는다.
@@ -453,7 +454,7 @@ def crosscut(videos_path="./video", option="random"):
                 # PADDING TIME이 들어가면 엄청 좋은 부분을 놓칠수도 있지만, 넣어야 계속해서 그 주변에서 전환되는 문제가 해결됨!
                 # CALCULATE DISTANCE between reference_clip, compare_clip(같은초에서 최선의 거리 장면 찾기)
                 cur_d, plus_frame, refer_length, refer_degree, compare_length, compare_degree, refer_point, compare_point = distance(reference_clip, clip) 
-                print('from video:',current_idx, ' to video',video_idx, ' in distance ',cur_d, ' in sec ' ,cur_t + plus_frame, 'first deg ', refer_degree, 'second deg ', compare_degree)
+                print('from video:',current_idx, ' to video',video_idx, ' in distance ',cur_d, ' in sec ' ,cur_t + plus_frame, 'first deg ', refer_degree, 'second deg ', compare_degree, ' refer length ', refer_length, ' compare length', compare_length)
                 
                 if d > cur_d: # 최소 정보 찾기!
                     d = cur_d
@@ -468,11 +469,11 @@ def crosscut(videos_path="./video", option="random"):
                     refer_degree_max = refer_degree
                     compare_degree_max = compare_degree
             
-            if d == 5000000 or (not cur_clip): # 거리가 모두 inf일떄,cur_clip 자체가 비어있을때
+            if d > TOTAL_MIN_DIFF or d == 5000000 or (not cur_clip): # 거리가 모두 inf일떄,cur_clip 자체가 비어있을때
                 # current_idx는 다음으로 넘어간다!!!
                 current_idx = min_idx # 다음에 재생될 idx
                 clip = reference_clip # 현재 클립(여기는 거리가 Inf이므로 10초 전체가 잘려있다!)
-                t = next_t
+                t = min(t+WINDOW_TIME, min_time) # 마지막은 window초보다 작은초일수도 있으니
                 con_clips.append(clip)
                 if t < min_time: # t가 이미 min_time을 넘었을땐 더할 필요도 없음!
                     # 뒤에 padding 데이터 더하기
