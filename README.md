@@ -72,7 +72,7 @@ To install package
 ## Contribution guidelines
 
 -----------------------
-If you want to contribute to **Cross Cutting**, be sure to review the [contribution guideline](https://github.com/C4Ution/MMMaker/). This project adheres to Sknife's code of conduct. By participating, you are expected to uphold this code.
+If you want to contribute to **Cross Cutting**, be sure to review the contribution guideline. This project adheres to Sknife's code of conduct. By participating, you are expected to uphold this code.
 
 We use GitHub issues for tracking requests and bugs.
 
