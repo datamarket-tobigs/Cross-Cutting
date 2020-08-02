@@ -21,7 +21,10 @@ def crosscut(videos_path="./video", option="random"):
     extracted_clips_array = []
 
     # VIDEO SONG START TIME ARRAY
-    start_times = [0.3, 1, 0] # 노래 개수
+    # start_times = [0.3, 1, 0] # 노래 개수
+    # start_times = [15.0, 0.5, 10.0, 0.0, 0.0, 0.0, 6.5, 6.0, 0.5] # fifth season
+    # start_times = [1.0, 1.0, 0.5, 0, 15.5, 0.5, 0.5, 1.0, 2.5] #fiesta
+    start_times = [12.088, 2.639, 1.259, 1.668, 1.8, 1.19, 1.845, 7.2, 0, 1.972] #wannabe
 
     # VIDEO ALIGNMENT -> SLICE START TIME
     for i in range(len(os.listdir(videos_path))):
@@ -106,14 +109,16 @@ def crosscut(videos_path="./video", option="random"):
         print("Not None")
         final_clip.audio = audioclip
 
-    final_clip.write_videofile("crosscut_fifthseason.mp4")
+    final_clip.write_videofile("crosscut_fiesta.mp4")
     return final_clip
 
 start_time = time.time()
-crosscut(videos_path="./video", option="norandom")
+# crosscut(videos_path="./video", option="norandom")
+# crosscut(videos_path="C:/Users/eunsun/tobigs/cross_cutting_eunsun/video2", option="norandom")
+# crosscut(videos_path="./fifth_season", option="norandom")
+# crosscut(videos_path="./fiesta", option="norandom")
+# crosscut(videos_path="./wannabe", option="norandom")
 
 end_time = time.time()
 
 print(end_time - start_time)
-# 그냥 1 frame으로 총 작업하는데 2688.1366200447083
-# 4 frame  576.5337190628052
