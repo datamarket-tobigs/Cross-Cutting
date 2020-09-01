@@ -7,12 +7,11 @@
 
 # Cross Cutting
 
-**Cross-Cutting** is a service that makes it easy for anyone to make mixed music video
+**Cross-Cutting** is a service that makes it easy for anyone to make mixed music video. Please check the video on our [web page](https://sknife.run.goorm.io/).
 
 Cross-Cutting is an open source project developed by Tobigs Team6 using MoviePy, Keras-facenet, OpenCV, etc..
 
 Cross-Cutting is made in Python 3 version.
-
 ## Installation
 
 ---------------
@@ -68,6 +67,7 @@ To install package
 * Issue Tracker: https://github.com/Tobigs-Team06/Cross-Cutting/issues
 * Source Code: https://github.com/Tobigs-Team06/Cross-Cutting/src
 * Pull Requests : https://github.com/Tobigs-Team06/Cross-Cutting/pulls
+* Demo Web page : https://sknife.run.goorm.io/
 
 ## Contribution guidelines
 
