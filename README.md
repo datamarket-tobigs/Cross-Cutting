@@ -68,7 +68,7 @@ To install package
 * Source Code: https://github.com/Tobigs-Team06/Cross-Cutting/src
 * Pull Requests : https://github.com/Tobigs-Team06/Cross-Cutting/pulls
 * Demo Web page : https://sknife.run.goorm.io/
-* Demo Youtube : https://www.youtube.com/playlist?list=PL2ujL1cVJWd7UN06TpEyGTWfRnboDDe6_
+* Demo Youtube : [https://www.youtube.com/playlist?list=PL2ujL1cVJWd7UN06TpEyGTWfRnboDDe6_](https://www.youtube.com/playlist?list=PL2ujL1cVJWd7UN06TpEyGTWfRnboDDe6_)
 
 ## Contribution guidelines
 
