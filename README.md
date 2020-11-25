@@ -65,9 +65,13 @@ To install package
 ## Result
 
 ----------------
-<img src="https://github.com/Tobigs-team/Cross-Cutting/blob/master/img/gif/fiesta1_(1).gif">
-![Alt Text](https://github.com/Tobigs-team/Cross-Cutting/blob/master/img/gif/fiesta1_(1).gif)
-
+<div class="row">
+    <img style="margin-right: 15px; margin-bottom: 15px" src="https://github.com/Tobigs-team/Cross-Cutting/blob/master/img/gif/fiesta1_(1).gif" width="450" height="250">
+    <img src="https://github.com/Tobigs-team/Cross-Cutting/blob/master/img/gif/fifth_gif_2-min.gif" width="450" height="250">
+    <img style="margin-right: 15px; margin-bottom: 15px" src="https://github.com/Tobigs-team/Cross-Cutting/blob/master/img/gif/wan_short_3-min.gif" width="450" height="250">
+    <img src="https://github.com/Tobigs-team/Cross-Cutting/blob/master/img/gif/wanna_gif_2-min.gif" width="450" height="250">
+</div>
+    
 
 ## Contribute
 
