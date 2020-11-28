@@ -5,6 +5,7 @@ import numpy as np
 import time
 from video_facial_landmarks import calculate_distance
 import cv2
+import subprocess
 
 
 ONE_FRAME_SEC = 0.03336666666666588 # 29.97002997002997fps의 역수! 한 프레임당 시간을 계싼해서 프레임 id만 알면 현재 시간 알수 있도록 함# 0.03336666666666588??
@@ -14,7 +15,7 @@ ROTATE_MAX = 7 # 각 도 차이가 이 값 이상이면, crossfade 전환하지 
 WINDOW_TIME = 10 # WINDOW_TIME 초 안에서 최소 거리를 찾는다. 얼굴이 겹치는 부분이 없다면, WINDOW_TIME 만큼 자르고 radom으로 다음 영상을 재생한다.
 PADDED_TIME = 1.5 # 최소 시간으로 영상을 자른 뒤 PADDED_TIME 만큼은 얼굴 거리를 계산하지 않는다.
 # TRANSITION INFO
-ZOOM_FRAME =20 # 얼굴 확대하는 FRAME 수
+ZOOM_FRAME = 20 # 얼굴 확대하는 FRAME 수
 CROSS_FRAME = 4 # CrossFade FRAME 수
 ONE_ZOOM = 1.2 # 회전 확대 후 검은 비율을 줄이기 위해서 확대하는 비율
 AGAIN_ZOOM = 1.15 # 영상이 확대가 불가능(영상 최대 크기 넘어감)할 때 한번 더 확대할 수 있는 비율. 한번 더 확대하고도 범위가 넘어가면, 그냥 아무 효과없이 전환한다.
@@ -392,17 +393,15 @@ class ForceZoom:
 
  
 def crosscut(videos_path="./video", option="random"):
+    subprocess.call(f'rm -rf {videos_path}/.DS_Store', shell=True)
+
     min_time = 1000.0
     min_idx = 0
     audioclip = None
     extracted_clips_array = []
-    # VIDEO SONG START TIME ARRAY
-    #                0  1  2  3  4  5   6  7  8  9  10
-    # start_times = [0, 4, 4, 0, 0, 1, 14, 0, 0, 0, 0]
-    # start_times = [0.3, 1, 0] # 노래 개수
-    start_times = [0 for i in range(10)] # 노래 개수
+    video_num = len(os.listdir(videos_path))
+    start_times = [0] * video_num # VIDEO ALIGNMENT -> SLICE START TIME
 
-    # VIDEO ALIGNMENT -> SLICE START TIME
     for i in range(len(os.listdir(videos_path))):
         video_path = os.path.join(videos_path, sorted(os.listdir(videos_path))[i]) # 순서가 뒤죽박죽 되지 않게!
         clip = VideoFileClip(video_path)
@@ -554,7 +553,7 @@ def crosscut(videos_path="./video", option="random"):
     if audioclip !=None:
         final_clip.audio = audioclip
 
-    final_clip.write_videofile("random.mp4")
+    final_clip.write_videofile("video.mp4")
     return final_clip
 
 start_time = time.time()
@@ -562,5 +561,3 @@ crosscut(videos_path="./video", option="norandom")
 end_time = time.time()
 
 print(end_time - start_time, 'total Generation time')
-# 그냥 1 frame으로 총 작업하는데 2688.1366200447083
-# 4 frame  576.5337190628052

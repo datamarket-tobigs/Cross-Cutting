@@ -2,3 +2,5 @@ video/
 .idea/
 *.pyc
 *.xml
+*.pptx
+*.mov
