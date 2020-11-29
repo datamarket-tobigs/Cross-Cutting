@@ -23,6 +23,8 @@ import numpy as np
 # 1 frame으로 총 작업하는데 2688.1366200447083 / 4 frame  576.5337190628052
 skip_frame_rate = 2
 MINMAX_FRAMES = 3 # 주변 frame 중에서 가장 큰 값의 min을 얻어야 함
+print('landmark hypeparmeter')
+print(skip_frame_rate, MINMAX_FRAMES)
 
 def extract_landmark(reference_clip, compare_clip):
 	print("[INFO] loading facial landmark predictor...")
@@ -112,11 +114,12 @@ def calculate_distance(reference_clip, compare_clip):
 	refer_point = []
 	compare_point = []
 	max_dist = []
-	for i in range(min_size - (MINMAX_FRAMES - 1)): # 해당 frame "이후"에 frame들 확인
-		if None in dist_arr[i:i + MINMAX_FRAMES]:
+	for i in range(min_size - (MINMAX_FRAMES - 1)): # 해당 frame "이전과 이후"에 frame들 확인
+		start_minmax_idx = 0 if (i - MINMAX_FRAMES)<0 else i - MINMAX_FRAMES
+		if (None in dist_arr[start_minmax_idx :i + MINMAX_FRAMES]):
 			max_dist.append(None)
 		else:
-			tmp_max = np.max(dist_arr[i:i + MINMAX_FRAMES])
+			tmp_max = np.max(dist_arr[start_minmax_idx:i + MINMAX_FRAMES])
 			max_dist.append(tmp_max) # 해당 frame의 가장 최대값
 			if min_diff > tmp_max:
 				min_diff = tmp_max
@@ -137,10 +140,11 @@ def calculate_distance(reference_clip, compare_clip):
 								(clips_frame_info[1][i+1][r][0]*2,clips_frame_info[1][i+1][r][1]*2)]
 			
 	# 640 width 로 확인했으면 두배
+	min_diff = min_diff * 2
 	additional_info = {
 		"refer_length" : refer_length*2, "refer_degree" : refer_degree, 
 		"compare_length" : compare_length*2, "compare_degree" : compare_degree,
 		"refer_point" : refer_point, "compare_point" : compare_point 
 	} # 거리와 해당 초 위치를 계산해준다!
 
-	return min_diff*2, (min_idx*skip_frame_rate)/clips[0].fps, additional_info
+	return min_diff, (min_idx*skip_frame_rate)/clips[0].fps, additional_info
