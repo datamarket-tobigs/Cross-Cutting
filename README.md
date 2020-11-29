@@ -59,7 +59,7 @@ To install package
 ```bash
     $ cd face_sync
     $ pip install -r requirements.txt
-    $ python generate_func_test.py
+    $ python generate_srrr.py
 ```
 
 ## Result

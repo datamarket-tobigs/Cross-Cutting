@@ -21,7 +21,7 @@ import numpy as np
 
 # Frame 수 줄이면 시간 줄일 수 있음
 # 1 frame으로 총 작업하는데 2688.1366200447083 / 4 frame  576.5337190628052
-skip_frame_rate = 1 
+skip_frame_rate = 1
 
 def extract_landmark(reference_clip, compare_clip):
 	print("[INFO] loading facial landmark predictor...")
@@ -123,7 +123,7 @@ def calculate_distance(reference_clip, compare_clip):
 			if None in dist_arr[i-2:i+1]: # None이 있으면 pass
 				continue
 
-			local_max = np.max(dist_arr[i-2:i+1]) # 최근 거리엥서 최대한 멀리 떨어진 값이 최소가 되어야 한다(얼굴 전환 적게)
+			local_max = np.max(dist_arr[i-2:i+1]) # 최근 거리엥서 최대한 멀리 떨어진 값이 최소가 되어야 한다(얼굴 전환 적게) - 문제점. 이전거랑 비교하면 전환되고 나서의 변화량을 고려 못함
 			if min_diff > local_max:
 				min_diff = local_max
 				refer_length = refer_length_temp
@@ -140,4 +140,10 @@ def calculate_distance(reference_clip, compare_clip):
 			dist_arr.append(None)
 
 	# 640 width 로 확인했으면 두배
-	return min_diff*2, (min_idx*skip_frame_rate)/clips[0].fps, refer_length*2, refer_degree, compare_length*2, compare_degree, refer_point, compare_point # 거리와 해당 초 위치를 계산해준다!
+	additional_info = {
+		"refer_length" : refer_length*2, "refer_degree" : refer_degree, 
+		"compare_length" : compare_length*2, "compare_degree" : compare_degree,
+		"refer_point" : refer_point, "compare_point" : compare_point 
+	} # 거리와 해당 초 위치를 계산해준다!
+
+	return min_diff*2, (min_idx*skip_frame_rate)/clips[0].fps, additional_info

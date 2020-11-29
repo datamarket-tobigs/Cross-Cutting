@@ -3,17 +3,17 @@ from moviepy.editor import VideoFileClip, concatenate_videoclips, CompositeVideo
 import random
 import numpy as np
 import time
-from video_facial_landmarks import calculate_distance
+from video_facial_landmarks_minmax import calculate_distance
 import cv2
 import subprocess
 
 
 ONE_FRAME_SEC = 0.03336666666666588 # 29.97002997002997fps의 역수! 한 프레임당 시간을 계싼해서 프레임 id만 알면 현재 시간 알수 있도록 함# 0.03336666666666588??
-EYE_MIN_DIFF = 100 # 두 영상의 눈 크기 차이가 거리 이상이면, crossfade 전환 하지 않는다.
+EYE_MIN_DIFF = 65 # 두 영상의 눈 크기 차이가 거리 이상이면, crossfade 전환 하지 않는다.
 TOTAL_MIN_DIFF = 200 # 두 영상의 눈 거리가 이 이상이면 전환 자체를 시도하지 않는다(엉뚱한데 옮겨가는거 피하기)
 ROTATE_MAX = 7 # 각 도 차이가 이 값 이상이면, crossfade 전환하지 않는다.
 WINDOW_TIME = 10 # WINDOW_TIME 초 안에서 최소 거리를 찾는다. 얼굴이 겹치는 부분이 없다면, WINDOW_TIME 만큼 자르고 radom으로 다음 영상을 재생한다.
-PADDED_TIME = 1.5 # 최소 시간으로 영상을 자른 뒤 PADDED_TIME 만큼은 얼굴 거리를 계산하지 않는다.
+PADDED_TIME = 3 # 최소 시간으로 영상을 자른 뒤 PADDED_TIME 만큼은 얼굴 거리를 계산하지 않는다.
 # TRANSITION INFO
 ZOOM_FRAME = 20 # 얼굴 확대하는 FRAME 수
 CROSS_FRAME = 4 # CrossFade FRAME 수
@@ -31,9 +31,12 @@ compare_degree_max = 0
 
 def distance(reference_clip, clip):
     # cv2 를 이용해서 최대 거리, 다음 영상 Idx, 거리, 각도, 눈 위치를 구한다.
-    min_diff, min_idx, refer_length, refer_degree, compare_length, compare_degree, refer_point, compare_point = calculate_distance(reference_clip, clip)
+    min_diff, min_idx, info = calculate_distance(reference_clip, clip)
     
-    return min_diff, min_idx, refer_length, refer_degree, compare_length, compare_degree, refer_point, compare_point
+    return min_diff, min_idx,\
+        info['refer_length'], info['refer_degree'], \
+        info['compare_length'], info['compare_degree'], \
+        info['refer_point'], info['compare_point']
 
 # 더 작은 쪽에서 하는 것!
 class MovingWithoutDefalutZoom:
