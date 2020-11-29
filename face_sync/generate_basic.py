@@ -6,13 +6,12 @@ import time
 from video_facial_landmarks import calculate_distance
 
 
-
 def distance(reference_clip, clip):
     # ref_frames = np.array([frame for frame in reference_clip.iter_frames()]) / 255.0
     # frames = np.array([frame for frame in clip.iter_frames()]) / 255.0
-    min_diff, min_idx, first_length, first_degree, second_length, second_degree,_,_ = calculate_distance(reference_clip, clip)
+    min_diff, min_idx, additional_info = calculate_distance(reference_clip, clip)
     
-    return min_diff, min_idx, first_length, first_degree, second_length, second_degree
+    return min_diff, min_idx
 
 def crosscut(videos_path="./video", option="random"):
     min_time = 1000.0
@@ -77,7 +76,7 @@ def crosscut(videos_path="./video", option="random"):
                 # 이미 확인한 앞부분은 무시해야 함!!(! 첫번째 영상은 3초는 무조건 안겹치는 문제 있음)
                 # !! ㅜㅜ 제일 좋은 얼굴 부분 놓칠수도 있을듯!
                 # CALCULATE DISTANCE
-                cur_d, plus_frame, first_length, first_degree, second_length, second_degree = distance(reference_clip, clip) 
+                cur_d, plus_frame = distance(reference_clip, clip) 
                 print(current_idx, video_idx, cur_d, cur_t + plus_frame)
                 if d > cur_d:
                     d = cur_d
@@ -113,11 +112,7 @@ def crosscut(videos_path="./video", option="random"):
     return final_clip
 
 start_time = time.time()
-# crosscut(videos_path="./video", option="norandom")
-# crosscut(videos_path="C:/Users/eunsun/tobigs/cross_cutting_eunsun/video2", option="norandom")
-# crosscut(videos_path="./fifth_season", option="norandom")
-# crosscut(videos_path="./fiesta", option="norandom")
-# crosscut(videos_path="./wannabe", option="norandom")
+crosscut(videos_path="./video", option="norandom")
 
 end_time = time.time()
 
