@@ -23,6 +23,8 @@ AGAIN_ZOOM = 1.15 # 영상이 확대가 불가능(영상 최대 크기 넘어감
 PANELTY = 100
 print('hyper parameter')
 print(ONE_FRAME_SEC, EYE_MIN_DIFF, ROTATE_MAX, WINDOW_TIME, PADDED_TIME, ZOOM_FRAME, CROSS_FRAME, ONE_ZOOM, AGAIN_ZOOM)
+TEST = False
+TEST_TIME = 30
 
 def distance(reference_clip, clip, use_face_panelty = False):
     # cv2 를 이용해서 최대 거리, 최소 시간, 거리, 각도, 눈 위치를 구한다.
@@ -279,14 +281,14 @@ def crosscut(videos_path="./video", option="random", use_face_panelty=False):
     
     con_clips.append(extracted_clips_array[current_idx].subclip(0, min(t, int(min_time)))) # 앞에서 시작점은 맞춰졌으므로 0부터 시작하면 된다!
     
-    # GENERATE STAGEMIX
-    # CONCAT SUBCLIP 0~ MIN DURATION CLIP TIME
-    TEST = True
-    if TEST:
-        CHECK_DURATION = 60
+    
+    if TEST: # test하면 일부분만 생성해서 빠르게 확인하기
+        CHECK_DURATION = TEST_TIME
         min_time = CHECK_DURATION
         audioclip = audioclip.set_duration(CHECK_DURATION)
-
+    
+    # GENERATE STAGEMIX
+    # CONCAT SUBCLIP 0~ MIN DURATION CLIP TIME
     while t < min_time:
         print(check_tqdm,'------------------------------------------------------------------')
         check_tqdm += 1
