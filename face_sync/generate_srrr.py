@@ -4,6 +4,7 @@ import random
 import numpy as np
 import time
 from video_facial_landmarks_minmax import calculate_distance
+from face_embedding import calculate_euclidean_distance
 import cv2
 import subprocess
 
@@ -19,14 +20,24 @@ ZOOM_FRAME = 20 # 얼굴 확대하는 FRAME 수
 CROSS_FRAME = 4 # CrossFade FRAME 수
 ONE_ZOOM = 1.2 # 회전 확대 후 검은 비율을 줄이기 위해서 확대하는 비율
 AGAIN_ZOOM = 1.15 # 영상이 확대가 불가능(영상 최대 크기 넘어감)할 때 한번 더 확대할 수 있는 비율. 한번 더 확대하고도 범위가 넘어가면, 그냥 아무 효과없이 전환한다.
+PANELTY = 100
 print('hyper parameter')
 print(ONE_FRAME_SEC, EYE_MIN_DIFF, ROTATE_MAX, WINDOW_TIME, PADDED_TIME, ZOOM_FRAME, CROSS_FRAME, ONE_ZOOM, AGAIN_ZOOM)
 
-def distance(reference_clip, clip):
-    # cv2 를 이용해서 최대 거리, 다음 영상 Idx, 거리, 각도, 눈 위치를 구한다.
-    min_diff, min_idx, info = calculate_distance(reference_clip, clip)
+def distance(reference_clip, clip, use_face_panelty = False):
+    # cv2 를 이용해서 최대 거리, 최소 시간, 거리, 각도, 눈 위치를 구한다.
+    min_diff, min_time, info = calculate_distance(reference_clip, clip)
     
-    return min_diff, min_idx,\
+    if use_face_panelty:
+        # 얼굴이 다른 경우에 penalty 주기!
+        ref_frame = reference_clip.get_frame(min_time)
+        frame = clip.get_frame(min_time)
+        
+        e_dist = calculate_euclidean_distance(ref_frame, frame)
+        print("Face Panelty Applied With ", e_dist / 1.25 *penalty)
+        min_diff += e_dist / 1.25 *penalty # 범위 0~1로 바꿔주기 위함
+
+    return min_diff, min_time,\
         info['refer_length'], info['refer_degree'], \
         info['compare_length'], info['compare_degree'], \
         info['refer_point'], info['compare_point']
@@ -230,7 +241,7 @@ class ForceZoom:
 
 
  
-def crosscut(videos_path="./video", option="random"):
+def crosscut(videos_path="./video", option="random", use_face_panelty=False):
     subprocess.call(f'rm -rf {videos_path}/.DS_Store', shell=True)
 
     min_time = 1000.0
@@ -307,7 +318,7 @@ def crosscut(videos_path="./video", option="random"):
                 
                 # PADDING TIME이 들어가면 엄청 좋은 부분을 놓칠수도 있지만, 넣어야 계속해서 그 주변에서 전환되는 문제가 해결됨!
                 # CALCULATE DISTANCE between reference_clip, compare_clip(같은초에서 최선의 거리 장면 찾기)
-                cur_d, plus_frame, refer_length, refer_degree, compare_length, compare_degree, refer_point, compare_point = distance(reference_clip, clip) 
+                cur_d, plus_frame, refer_length, refer_degree, compare_length, compare_degree, refer_point, compare_point = distance(reference_clip, clip, use_face_panelty=use_face_panelty) 
                 print('from video:',current_idx, ' to video',video_idx, ' in distance ',cur_d, ' in sec ' ,cur_t + plus_frame, 'first deg ', refer_degree, 'second deg ', compare_degree, ' refer length ', refer_length, ' compare length', compare_length)
                 
                 if d > cur_d: # 최소 정보 찾기!
@@ -386,15 +397,19 @@ def crosscut(videos_path="./video", option="random"):
                         pad_front = pad_front.fl(Moving(compare_point_min, refer_point_min, refer_length_min/compare_length_min, 'big_to_small',compare_degree_min-refer_degree_min))
                         pad_front = pad_front.resize((1280,720))
                         # 앞 영상 연속해서 틀면서 cross fade!(이때는 앞 영상은 회전및 확대가 없으므로 그대로 재생!)
-                        cross_clip = extracted_clips_array[prev_idx].subclip(t, t+ONE_FRAME_SEC*CROSS_FRAME) # min_time을 넘어가면 안됨!
-                        cross_clip = cross_clip.fl(ForceZoom(compare_point_min, refer_point_min, refer_length_min/compare_length_min, 'same')) # 여기서도 ForceZoom 필수!
-                        pad_front = CompositeVideoClip([pad_front, cross_clip.crossfadeout(ONE_FRAME_SEC*CROSS_FRAME)])
+                        # !!!! 여기 잠깐 주석
+                        # cross_clip = extracted_clips_array[prev_idx].subclip(t, t+ONE_FRAME_SEC*CROSS_FRAME) # min_time을 넘어가면 안됨!
+                        # cross_clip = cross_clip.fl(ForceZoom(compare_point_min, refer_point_min, refer_length_min/compare_length_min, 'same')) # 여기서도 ForceZoom 필수!
+                        # pad_front = CompositeVideoClip([pad_front, cross_clip.crossfadeout(ONE_FRAME_SEC*CROSS_FRAME)])
+                        # !!! 주석 끝
                     else: # 앞이 더 작은 경우 
                         pad_front = pad_front.fl(ForceZoom(refer_point_min, compare_point_min , compare_length_min/refer_length_min, 'big_to_small'))
                         pad_front = pad_front.resize((1280,720))
-                        cross_clip = extracted_clips_array[prev_idx].subclip(t, t+ONE_FRAME_SEC*CROSS_FRAME) # min_time을 넘어가면 안됨!
-                        cross_clip = cross_clip.fl(Moving(refer_point_min, compare_point_min, compare_length_min/refer_length_min, 'same',refer_degree_min-compare_degree_min))
-                        pad_front = CompositeVideoClip([pad_front, cross_clip.crossfadeout(ONE_FRAME_SEC*CROSS_FRAME)])
+                        # !!!! 여기 잠깐 주석
+                        # cross_clip = extracted_clips_array[prev_idx].subclip(t, t+ONE_FRAME_SEC*CROSS_FRAME) # min_time을 넘어가면 안됨!
+                        # cross_clip = cross_clip.fl(Moving(refer_point_min, compare_point_min, compare_length_min/refer_length_min, 'same',refer_degree_min-compare_degree_min))
+                        # pad_front = CompositeVideoClip([pad_front, cross_clip.crossfadeout(ONE_FRAME_SEC*CROSS_FRAME)])
+                        # !!! 주석 끝
                     con_clips.append(pad_front)
                     
                     ### PAD BACK ---------------
@@ -414,7 +429,12 @@ def crosscut(videos_path="./video", option="random"):
     return final_clip
 
 start_time = time.time()
-crosscut(videos_path="./video", option="norandom")
+
+use_face_panelty = True # FacePanelty를 사용하면 Panelty값이 기본적으로 들어가니까 자연스러운 전환을 위해서는 역치값을 높여아 함
+if use_face_panelty==True:
+    EYE_MIN_DIFF += PANELTY 
+    TOTAL_MIN_DIFF += PANELTY 
+crosscut(videos_path="./video", option="norandom", use_face_panelty = False)
 end_time = time.time()
 
 print(end_time - start_time, 'total Generation time')
