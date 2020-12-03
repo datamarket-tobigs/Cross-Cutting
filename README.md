@@ -43,15 +43,6 @@ To install package
     $ python generate.py
 ```
 
-#### Run generate face embedding mixed video code
-
--------------------
-```bash
-    $ cd face_embedding
-    $ pip install -r requirements.txt
-    $ python generate_embedding.py
-```
-
 #### Run generate face based mixed video code
 
 -------------------
