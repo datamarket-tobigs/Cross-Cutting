@@ -3,12 +3,15 @@ from moviepy.editor import VideoFileClip, concatenate_videoclips
 import random
 import numpy as np
 import time
-from video_facial_landmarks import calculate_distance
+from video_facial_landmarks_minmax import calculate_distance
 
+TEST = False
+TEST_TIME = 20
+INIT_NUM = float("Inf")
+WINDOW_TIME = 10
+PADDED_TIME = 4 # 얼굴이 클로즈업 된게 있으면 계속 클로즈업 된 부분만 찾으므로 3초정도 띄어준다.
 
 def distance(reference_clip, clip):
-    # ref_frames = np.array([frame for frame in reference_clip.iter_frames()]) / 255.0
-    # frames = np.array([frame for frame in clip.iter_frames()]) / 255.0
     min_diff, min_idx, additional_info = calculate_distance(reference_clip, clip)
     
     return min_diff, min_idx
@@ -19,11 +22,8 @@ def crosscut(videos_path="./video", option="random"):
     audioclip = None
     extracted_clips_array = []
 
-    # VIDEO SONG START TIME ARRAY
-    # start_times = [0.3, 1, 0] # 노래 개수
-    # start_times = [15.0, 0.5, 10.0, 0.0, 0.0, 0.0, 6.5, 6.0, 0.5] # fifth season
-    # start_times = [1.0, 1.0, 0.5, 0, 15.5, 0.5, 0.5, 1.0, 2.5] #fiesta
-    start_times = [12.088, 2.639, 1.259, 1.668, 1.8, 1.19, 1.845, 7.2, 0, 1.972] #wannabe
+    video_num = len(os.listdir(videos_path))
+    start_times = [0] * video_num # VIDEO ALIGNMENT -> SLICE START TIME
 
     # VIDEO ALIGNMENT -> SLICE START TIME
     for i in range(len(os.listdir(videos_path))):
@@ -39,31 +39,32 @@ def crosscut(videos_path="./video", option="random"):
         extracted_clips_array.append(clip)
     print(len(extracted_clips_array))
 
-    con_clips = []
-    t = 3
-    current_idx = 0
-    window_time = 10
-    padded_time = 4 # 얼굴이 클로즈업 된게 있으면 계속 클로즈업 된 부분만 찾으므로 3초정도 띄어준다.
-    con_clips.append(extracted_clips_array[current_idx].subclip(0, min(t, int(min_time))))
+    if TEST: # test하면 일부분만 생성해서 빠르게 확인하기
+        min_time = TEST_TIME
+        audioclip = audioclip.set_duration(TEST_TIME)
 
     # GENERATE STAGEMIX
     # CONCAT SUBCLIP 0~ MIN DURATION CLIP TIME
-    while t <= int(min_time):
+    con_clips = []
+    t = 3 # 초반 3초 INIT
+    current_idx = 0 # INIT
+    con_clips.append(extracted_clips_array[current_idx].subclip(0, min(t, int(min_time))))
+
+    while t < min_time:
         # 10 sec.
         cur_t = t
-        next_t = min(t+window_time, min_time) # 마지막은 window초보다 작은초일수도 있으니
-        next_frame =  min(t+window_time, min_time) # 제일 비슷한 영상을 못찾으면 그냥 window초 넘어갈수 있다
+        next_t = min(t+WINDOW_TIME, min_time) # 마지막은 window초보다 작은초일수도 있으니
 
         # RANDOM BASED METHOD
-        if option=="random":
+        if option=="random" or min(min_time,t + PADDED_TIME)==min_time:
             random_video_idx = random.randint(0, len(extracted_clips_array)-1)
             clip = extracted_clips_array[random_video_idx].subclip(cur_t, next_t)
-            t = next_frame
+            t = next_t
             con_clips.append(clip)
         else:
             # 지금 현재 영상!
             reference_clip = extracted_clips_array[current_idx].subclip(cur_t, next_t)
-            d = 5000000
+            d = INIT_NUM
             cur_clip = None
             # inf가 있을때는 이 idx로 설정됨!
             min_idx = (current_idx+1)%len(extracted_clips_array) 
@@ -81,7 +82,7 @@ def crosscut(videos_path="./video", option="random"):
                 if d > cur_d:
                     d = cur_d
                     min_idx = video_idx
-                    next_frame = cur_t + plus_frame # 바로 옮길 frame
+                    next_t = cur_t + plus_frame # 바로 옮길 frame
                     cur_clip = reference_clip.subclip(0, plus_frame)
                     # next_clip = clip.subclip(0, plus_frame) # 그 바꿀 부분만 자르는 클립!
 
@@ -90,18 +91,17 @@ def crosscut(videos_path="./video", option="random"):
                 clip = cur_clip # 현재 클립(바꾸면 가장 좋은 부분까지 잘린 현재 클립)
             else:
                 clip = reference_clip # 현재 클립 10초 모두
-            t = next_frame
+            t = next_t
             con_clips.append(clip)
 
             # 다음 clip : padding 길이는 반드시 append
             # 뒤에 padding 데이터 더하기
             current_idx = min_idx # 바로 다음에 이어지면 가까운 거리로 연결되는 데이터
             print("idx : {}".format(current_idx))
-            pad_clip = extracted_clips_array[current_idx].subclip(t, min(min_time,t+padded_time)) # min_time을 넘어가면 안됨!
-            t = min(min_time,t + padded_time) # padding 된 시간 더하기
+            pad_clip = extracted_clips_array[current_idx].subclip(t, min(min_time,t+PADDED_TIME)) # min_time을 넘어가면 안됨!
+            t = min(min_time,t + PADDED_TIME) # padding 된 시간 더하기
             con_clips.append(pad_clip)
             
-
     final_clip = concatenate_videoclips(con_clips)
 
     if audioclip !=None:
