@@ -1,16 +1,13 @@
-import torchvision
-from torchvision.models.detection.faster_rcnn import FastRCNNPredictor
-from torchvision import transforms
-from PIL import Image
+from torchvision import models
 import numpy as np
 import torch
 import os
 from moviepy.editor import VideoFileClip
 
-skip_frame_rate = 10
+SKIP_FRAME_RATE = 10
 MINIMAX_FRAME = 4
 # 함수에서 documentaiton 읽기
-model = torchvision.models.detection.fasterrcnn_resnet50_fpn(pretrained=True)
+model = models.detection.fasterrcnn_resnet50_fpn(pretrained=True)
 model.eval()
 os.environ['KMP_DUPLICATE_LIB_OK']='True'
 
@@ -22,7 +19,7 @@ def extract_boxes(reference_clip, compare_clip):
         every_frame_info = []
         # loop over the frames from the video stream
         while True:
-            i+=skip_frame_rate # 1초에 60 fps가 있으므로 몇개는 skip해도 될거 같음!
+            i+=SKIP_FRAME_RATE # 1초에 60 fps가 있으므로 몇개는 skip해도 될거 같음!
             if (i*1.0/clip.fps)> clip.duration:
                 break
 
@@ -82,4 +79,4 @@ def calculate_pose_distance(reference_clip, compare_clip):
                 min_idx = i
 
     # return distance, second, additional_info
-    return min_diff, (min_idx*skip_frame_rate)/reference_clip.fps, {}
+    return min_diff, (min_idx*SKIP_FRAME_RATE)/reference_clip.fps, {}
