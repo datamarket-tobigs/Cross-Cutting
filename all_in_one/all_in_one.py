@@ -31,7 +31,7 @@ class RandomDistance:
         dur_end = min(reference_clip.duration, compare_clip.duration)
         return random.randrange(1,100), min(dur_end, random.randrange(3,7)), {}
 
-class LandmarkDistance:
+class FaceDistance:
     def __init__(self, shape_predictor_path):
         self.skip_frame_rate = 4 # 'the number of frames to skip'
         self.minimax_frames = 5 # 'the number of frames to minimax distance'
@@ -334,9 +334,9 @@ if __name__ == "__main__":
     if method == 'random':
         random_distance = RandomDistance()
         cross_cut = Crosscut(random_distance, video_path, output_path)
-    elif method == 'landmark':
-        landmark_distance = LandmarkDistance(shape_predictor_path)
-        cross_cut = Crosscut(landmark_distance, video_path, output_path)
+    elif method == 'face':
+        face_distance = FaceDistance(shape_predictor_path)
+        cross_cut = Crosscut(face_distance, video_path, output_path)
     elif method == 'pose':
         pose_distance = PoseDistance()
         cross_cut = Crosscut(pose_distance, video_path, output_path)
