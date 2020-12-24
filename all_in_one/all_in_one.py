@@ -167,12 +167,7 @@ class PoseDistance:
 
         return clips_frame_info
 
-
-    def distance(self, reference_clip, compare_clip, args):
-        clips_frame_info = self.extract_boxes(reference_clip, compare_clip) # 모든 프레임마다 길이 계산해줌
-
-        min_size = min(len(clips_frame_info[0]),len(clips_frame_info[1]))
-        
+    def get_all_frame_distance(self, clips_frame_info, min_size):
         dist_arr = list()
         # Calculate distance (by frame)
         for i in range(min_size):
@@ -189,6 +184,11 @@ class PoseDistance:
                 dist_arr.append(total_diff)
             else:
                 dist_arr.append(None)
+
+    def distance(self, reference_clip, compare_clip, args):
+        clips_frame_info = self.extract_boxes(reference_clip, compare_clip) # 모든 프레임마다 길이 계산해줌
+        min_size = min(len(clips_frame_info[0]),len(clips_frame_info[1]))
+        dist_arr = self.get_all_frame_distance(clips_frame_info, min_size)  
 
         # Minimize max distance in (minimax_frames) frames
         min_diff = np.float('Inf')
