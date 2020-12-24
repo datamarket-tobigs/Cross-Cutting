@@ -85,13 +85,7 @@ class FaceDistance:
         cv2.destroyAllWindows()
         return clips_frame_info
 
-
-    def distance(self, reference_clip, compare_clip, args):
-        time.sleep(2.0)
-        clips_frame_info = self.extract_landmark(reference_clip, compare_clip) # 모든 프레임마다 길이 계산해줌
-        clips =[reference_clip,compare_clip]
-
-        min_size = min(len(clips_frame_info[0]),len(clips_frame_info[1]))
+    def get_all_frame_distance(self, clips_frame_info, min_size):
         dist_arr = []
         # Calculate distance by frame
         for i in range(min_size-1):
@@ -105,6 +99,14 @@ class FaceDistance:
                 dist_arr.append(total_diff)
             else:
                 dist_arr.append(None)
+        return dist_arr
+
+    def distance(self, reference_clip, compare_clip, args):
+        time.sleep(2.0)
+        clips_frame_info = self.extract_landmark(reference_clip, compare_clip) # 모든 프레임마다 길이 계산해줌
+        min_size = min(len(clips_frame_info[0]),len(clips_frame_info[1]))
+        dist_arr = self.get_all_frame_distance(clips_frame_info, min_size)
+        clips =[reference_clip,compare_clip]
 
         # Minimize max distance in (minimax_frames) frames
         minimax_frames = self.minimax_frames
