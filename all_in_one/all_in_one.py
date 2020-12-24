@@ -87,32 +87,36 @@ class FaceDistance:
 
 
     def distance(self, reference_clip, compare_clip, args):
-        # landmark_minimax
         time.sleep(2.0)
         clips_frame_info = self.extract_landmark(reference_clip, compare_clip) # 모든 프레임마다 길이 계산해줌
+        clips =[reference_clip,compare_clip]
 
         min_size = min(len(clips_frame_info[0]),len(clips_frame_info[1]))
-        dist_arr = list()
-        # Calculate distance (by frame)
-        for i in range(min_size):
-            if len(clips_frame_info[0][i])>0 and len(clips_frame_info[1][i])>0: # 얼굴 둘다 있으면
-                # 양쪽 눈ƒ
-                left_eye = ((clips_frame_info[0][i][36][0] - clips_frame_info[1][i][36][0])**2 + (clips_frame_info[0][i][36][1] - clips_frame_info[1][i][36][1])**2)**0.5
-                right_eye = ((clips_frame_info[0][i][45][0] - clips_frame_info[1][i][45][0])**2 + (clips_frame_info[0][i][45][1] - clips_frame_info[1][i][45][1])**2)**0.5
+        dist_arr = []
+        # Calculate distance by frame
+        for i in range(min_size-1):
+            if len(clips_frame_info[0][i])>0 and len(clips_frame_info[1][i+1])>0: # 얼굴 둘다 있으면
+                # 두 영상에서 눈의 거리(왼쪽 눈 끼리, 오른쪽 눈 끼리)
+                l = 36 # 왼쪽 눈 왼쪽 끝
+                r = 45 # 오른쪽 눈3 오른쪽 끝
+                left_eye = ((clips_frame_info[0][i][l][0] - clips_frame_info[1][i+1][l][0])**2 + (clips_frame_info[0][i][l][1] - clips_frame_info[1][i+1][l][1])**2)**0.5
+                right_eye = ((clips_frame_info[0][i][r][0] - clips_frame_info[1][i+1][r][0])**2 + (clips_frame_info[0][i][r][1] - clips_frame_info[1][i+1][r][1])**2)**0.5
                 total_diff = left_eye + right_eye
                 dist_arr.append(total_diff)
             else:
                 dist_arr.append(None)
 
         # Minimize max distance in (minimax_frames) frames
+        minimax_frames = self.minimax_frames
         min_diff = np.float('Inf')
         min_idx = 0
         max_dist = []
-        for i in range(min_size-(self.minimax_frames-1)):
-            if None in dist_arr[i:i+self.minimax_frames]:
+        for i in range(min_size - (minimax_frames - 1)): # 해당 frame "이전과 이후"에 frame들 확인
+            start_minmax_idx = 0 if (i - minimax_frames)<0 else i - minimax_frames
+            if (None in dist_arr[start_minmax_idx :i + minimax_frames]):
                 max_dist.append(None)
             else:
-                tmp_max = np.max(dist_arr[i:i+self.minimax_frames])
+                tmp_max = np.max(dist_arr[start_minmax_idx:i + minimax_frames])
                 max_dist.append(tmp_max)
                 if min_diff > tmp_max:
                     min_diff = tmp_max
@@ -120,7 +124,6 @@ class FaceDistance:
         
         # return distance, second, additional_info
         return min_diff, (min_idx*self.skip_frame_rate)/self.clips[0].fps, {}
-
 
 class PoseDistance:
     def __init__(self):
@@ -319,7 +322,7 @@ class Crosscut:
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('--video_path', default='./videos', help='videos directory path')
-    parser.add_argument('--method', default='landmark', help='random or feature or landmark (stagemix method)')
+    parser.add_argument('--method', default='face', help='random, feature, face and pose (stagemix method)')
     parser.add_argument('--output_path', default='my_stagemix.mp4', help='save path of output "path/name.mp4" format')
     parser.add_argument('--shape_predictor_path', default='shape_predictor_68_face_landmarks.dat', help='path of "shape_predictor_68_face_landmarks.dat"-landmarks predictor')
     
