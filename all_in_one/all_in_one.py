@@ -177,10 +177,10 @@ class PoseDistance:
                 ref_frame_dots = clips_frame_info[0][i] # 해당 frame의 정보
                 compare_frame_dots = clips_frame_info[1][i] # 해당 frame의 정보
                 min_dot_num = min(len(ref_frame_dots), len(compare_frame_dots)) # reference 기준으로 계산할거양
+                dot_num_diff = abs(len(ref_frame_dots), len(compare_frame_dots))
                 penalty = ((self.clips[0].w **2 + self.clips[0].h**2)**0.5) * abs(len(ref_frame_dots)-len(compare_frame_dots)) # 개수가 다를때 주는 패널티
-                total_diff = penalty
+                total_diff = penalty * dot_num_diff
                 for dot_idx in range(min_dot_num):
-                    ref_frame_dots[dot_idx] and compare_frame_dots[dot_idx]
                     total_diff += ((ref_frame_dots[dot_idx][0] - compare_frame_dots[dot_idx][0])**2 + (ref_frame_dots[dot_idx][1] - compare_frame_dots[dot_idx][1])**2)**0.5
                 dist_arr.append(total_diff)
             else:
