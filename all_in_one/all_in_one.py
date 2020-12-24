@@ -149,6 +149,7 @@ class PoseDistance:
                     break
 
                 frame = clip.get_frame(i*1.0/clip.fps)
+                frame = imutils.resize(frame, width=640)
                 frame = frame/255 # image, and should be in ``0-1`` range.
                 frame = np.transpose(frame, (2,0,1)) #  HWC -> CHW(그 위치에 몇차원 애를 넣을거냔?)
                 x = [torch.from_numpy(frame).float()]
@@ -176,7 +177,7 @@ class PoseDistance:
                 ref_frame_dots = clips_frame_info[0][i] # 해당 frame의 정보
                 compare_frame_dots = clips_frame_info[1][i] # 해당 frame의 정보
                 min_dot_num = min(len(ref_frame_dots), len(compare_frame_dots)) # reference 기준으로 계산할거양
-                penalty = ((reference_clip.w **2 + reference_clip.h**2)**0.5) * abs(len(ref_frame_dots)-len(compare_frame_dots)) # 개수가 다를때 주는 패널티
+                penalty = ((self.clips[0].w **2 + self.clips[0].h**2)**0.5) * abs(len(ref_frame_dots)-len(compare_frame_dots)) # 개수가 다를때 주는 패널티
                 total_diff = penalty
                 for dot_idx in range(min_dot_num):
                     ref_frame_dots[dot_idx] and compare_frame_dots[dot_idx]
