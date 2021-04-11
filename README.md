@@ -7,7 +7,7 @@
 
 # Cross Cutting
 
-**Cross-Cutting** is a service that makes it easy for anyone to make mixed music video. Please check the video on our [web page](https://sknife.run.goorm.io/).
+**Cross-Cutting** is a service that makes it easy for anyone to make mixed music video. Please check the video on our [youtube](https://www.youtube.com/playlist?list=PL2ujL1cVJWd7UN06TpEyGTWfRnboDDe6_).
 
 Cross-Cutting is an open source project developed by Tobigs Team6 using MoviePy, Keras-facenet, OpenCV, etc..
 
@@ -22,7 +22,27 @@ To install package
     $ cd CrossCutting
 ```
 
-## Getting Started in Web
+## Test
+#### Run generate pose based mixed video code on python3.8
+
+-------------------
+```bash
+    $ cd pose_sync_pytorch
+    $ pip install -r requirements.txt
+    $ python generate_basic.py
+```
+
+#### Run generate face based mixed video code on python3.8
+
+-------------------
+
+```bash
+    $ cd face_sync
+    $ pip install -r requirements.txt
+    $ python generate_srrr.py
+```
+
+## WebPage
 
 ------------------------------
 ```bash
@@ -31,26 +51,6 @@ To install package
     $ python manage.py makemigrations
     $ python manage.py migrate
     $ python manage.py runserver 0.0.0.0:8000
-```
-
-## Test
-#### Run generate pose based mixed video code
-
--------------------
-```bash
-    $ cd pose_detection
-    $ pip install -r requirements.txt
-    $ python generate.py
-```
-
-#### Run generate face based mixed video code
-
--------------------
-
-```bash
-    $ cd face_sync
-    $ pip install -r requirements.txt
-    $ python generate_srrr.py
 ```
 
 ## Result
@@ -62,21 +62,12 @@ To install package
 <p align="center"><img src="https://github.com/Tobigs-team/Cross-Cutting/blob/master/img/gif/wanna_gif_2-min.gif" width="640" height="360"></p>
     
 
-## Contribute
+## Related Links
 
 ----------------
 * Issue Tracker: https://github.com/Tobigs-Team06/Cross-Cutting/issues
-* Source Code: https://github.com/Tobigs-Team06/Cross-Cutting/src
 * Pull Requests : https://github.com/Tobigs-Team06/Cross-Cutting/pulls
-* Demo Web page : https://sknife.run.goorm.io/
 * Demo Youtube : [https://www.youtube.com/playlist?list=PL2ujL1cVJWd7UN06TpEyGTWfRnboDDe6_](https://www.youtube.com/playlist?list=PL2ujL1cVJWd7UN06TpEyGTWfRnboDDe6_)
-
-## Contribution guidelines
-
------------------------
-If you want to contribute to **Cross Cutting**, be sure to review the contribution guideline. This project adheres to Sknife's code of conduct. By participating, you are expected to uphold this code.
-
-We use GitHub issues for tracking requests and bugs.
 
 ## Contributors ✨
 
@@ -93,11 +84,10 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
   </tr>
 </table>
 
-
-
+## Reference
+* pyimageSearch - https://www.pyimagesearch.com/2017/04/03/facial-landmarks-dlib-opencv-python/
+* FasterRCNN - https://pytorch.org/vision/stable/models.html#faster-r-cnn
 
 ## License
 
 [APACHE LICENSE, VERSION 2.0](https://www.apache.org/licenses/LICENSE-2.0)
-
-Copyright (c) 2020, Sknife
