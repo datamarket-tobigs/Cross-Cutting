@@ -115,7 +115,7 @@ def crosscut(videos_path="./video", option="random"):
         print("Not None")
         final_clip.audio = audioclip
 
-    final_clip.write_videofile("crosscut_fiesta.mp4")
+    final_clip.write_videofile("result.mp4")
     return final_clip
 
 start_time = time.time()
