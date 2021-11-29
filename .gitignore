@@ -6,3 +6,6 @@ video/
 *.mov
 *.mp4
 .DS_Store
+img/
+
+

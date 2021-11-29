@@ -19,21 +19,34 @@ import cv2
 import math
 import numpy as np
 
-# Frame 수 줄이면 시간 줄일 수 있음
-# 1 frame으로 총 작업하는데 2688.1366200447083 / 4 frame  576.5337190628052
-skip_frame_rate = 1
+skip_frame_rate = 2
 
+def calculate_distance(reference_clip, compare_clip):
+	# construct the `argument parse and parse the arguments
+	# ap = argparse.ArgumentParser()
+	# ap.add_argument("-p", "--shape-predictor", required=True, default = "shape_predictor_68_face_landmarks.dat",
+	# 	help="path to facial landmark predictor")
+	# ap.add_argument("-r", "--picamera", type=int, default=-1,
+	# 	help="whether or not the Raspberry Pi camera should be used")
+	# args = vars(ap.parse_args())
 
-def extract_landmark(reference_clip, compare_clip):
+	# initialize dlib's face detector (HOG-based) and then create
+	# the facial landmark predictor
 	print("[INFO] loading facial landmark predictor...")
 	# 얼굴 자체를 인식하는 기능
 	detector = dlib.get_frontal_face_detector()
 	# face 안에 얼굴 인식하는 기능
-	predictor = dlib.shape_predictor("shape_predictor_68_face_landmarks.dat")
 
+	predictor = dlib.shape_predictor("shape_predictor_68_face_landmarks.dat")
+	# predictor = dlib.shape_predictor(args["shape_predictor"])
+
+	# vs = VideoStream(usePiCamera=args["picamera"] > 0).start()
 	# 비디오 출력 : https://076923.github.io/posts/Python-opencv-4/
 	# https://docs.opencv.org/master/dd/d43/tutorial_py_video_display.html
+	# capture = cv2.VideoCapture("cut_2.mp4")
 	clips =[reference_clip,compare_clip]
+
+	time.sleep(2.0)
 
 	clips_frame_info = []
 	for clip in clips:
@@ -48,6 +61,9 @@ def extract_landmark(reference_clip, compare_clip):
 			i+=skip_frame_rate # 1초에 60 fps가 있으므로 몇개는 skip해도 될거 같음!
 			if (i*1.0/clip.fps)> clip.duration:
 				break
+			# if not ret:
+			# 	print("Error")
+			# 	break
 
 			# width 높이면 더 판별 잘되지만, computational power 높음
 			# The benefit of increasing the resolution of the input image prior to face detection is that it may allow us to detect more faces in the imag
@@ -78,13 +94,6 @@ def extract_landmark(reference_clip, compare_clip):
 		clips_frame_info.append(np.array(every_frame_info))
 
 	cv2.destroyAllWindows()
-
-	return clips_frame_info
-
-def calculate_distance(reference_clip, compare_clip):
-	time.sleep(2.0)
-	clips_frame_info = extract_landmark(reference_clip, compare_clip) # 모든 프레임마다 길이 계산해줌
-	clips =[reference_clip,compare_clip]
 
 	min_size = min(len(clips_frame_info[0]),len(clips_frame_info[1]))
 	min_diff = float("inf")
@@ -124,9 +133,7 @@ def calculate_distance(reference_clip, compare_clip):
 			if None in dist_arr[i-2:i+1]: # None이 있으면 pass
 				continue
 
-
-			local_max = np.max(dist_arr[i-2:i+1]) # 최근 거리에서 최대한 멀리 떨어진 값이 최소가 되어야 한다(얼굴 전환 적게) - 문제점. 이전거랑 비교하면 전환되고 나서의 변화량을 고려 못함
-
+			local_max = np.max(dist_arr[i-2:i+1]) # 최근 거리엥서 최대한 멀리 떨어진 값이 최소가 되어야 한다(얼굴 전환 적게)
 			if min_diff > local_max:
 				min_diff = local_max
 				refer_length = refer_length_temp
@@ -143,10 +150,4 @@ def calculate_distance(reference_clip, compare_clip):
 			dist_arr.append(None)
 
 	# 640 width 로 확인했으면 두배
-	additional_info = {
-		"refer_length" : refer_length*2, "refer_degree" : refer_degree, 
-		"compare_length" : compare_length*2, "compare_degree" : compare_degree,
-		"refer_point" : refer_point, "compare_point" : compare_point 
-	} # 거리와 해당 초 위치를 계산해준다!
-
-	return min_diff*2, (min_idx*skip_frame_rate)/clips[0].fps, additional_info
+	return min_diff*2, (min_idx*skip_frame_rate)/clip.fps, refer_length*2, refer_degree, compare_length*2, compare_degree, refer_point, compare_point # 거리와 해당 초 위치를 계산해준다!
