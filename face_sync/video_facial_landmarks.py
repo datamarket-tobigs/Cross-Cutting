@@ -3,7 +3,7 @@
 # python video_facial_landmarks.py --shape-predictor shape_predictor_68_face_landmarks.dat
 # python video_facial_landmarks.py --shape-predictor shape_predictor_68_face_landmarks.dat --picamera 1
 
-# 전체 참고
+# 전체 참고 
 # https://www.pyimagesearch.com/2017/04/03/facial-landmarks-dlib-opencv-python/
 
 # import the necessary packages
@@ -22,7 +22,6 @@ import numpy as np
 # Frame 수 줄이면 시간 줄일 수 있음
 # 1 frame으로 총 작업하는데 2688.1366200447083 / 4 frame  576.5337190628052
 skip_frame_rate = 1
-
 
 def extract_landmark(reference_clip, compare_clip):
 	print("[INFO] loading facial landmark predictor...")
@@ -48,11 +47,11 @@ def extract_landmark(reference_clip, compare_clip):
 			i+=skip_frame_rate # 1초에 60 fps가 있으므로 몇개는 skip해도 될거 같음!
 			if (i*1.0/clip.fps)> clip.duration:
 				break
-
+			
 			# width 높이면 더 판별 잘되지만, computational power 높음
 			# The benefit of increasing the resolution of the input image prior to face detection is that it may allow us to detect more faces in the imag
 			# !!! 아니면 너무 느려지면 640으로 낮춰서 해도 괜찮을듯(1280은 너무 세세한거까지 잡음)
-			frame = imutils.resize(frame, width=640) ### !!!! 여기 width 계산도 중요하다!(실제 좌표로 옮겨야 하니까)
+			frame = imutils.resize(frame, width=640) ### !!!! 여기 width 계산도 중요하다!(실제 좌표로 옮겨야 하니까) 
 			gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
 			# detect faces in the grayscale frame
@@ -74,7 +73,7 @@ def extract_landmark(reference_clip, compare_clip):
 				every_frame_info.append(shape)
 			else:
 				every_frame_info.append([])
-
+			
 		clips_frame_info.append(np.array(every_frame_info))
 
 	cv2.destroyAllWindows()
@@ -124,9 +123,7 @@ def calculate_distance(reference_clip, compare_clip):
 			if None in dist_arr[i-2:i+1]: # None이 있으면 pass
 				continue
 
-
-			local_max = np.max(dist_arr[i-2:i+1]) # 최근 거리에서 최대한 멀리 떨어진 값이 최소가 되어야 한다(얼굴 전환 적게) - 문제점. 이전거랑 비교하면 전환되고 나서의 변화량을 고려 못함
-
+			local_max = np.max(dist_arr[i-2:i+1]) # 최근 거리엥서 최대한 멀리 떨어진 값이 최소가 되어야 한다(얼굴 전환 적게) - 문제점. 이전거랑 비교하면 전환되고 나서의 변화량을 고려 못함
 			if min_diff > local_max:
 				min_diff = local_max
 				refer_length = refer_length_temp
